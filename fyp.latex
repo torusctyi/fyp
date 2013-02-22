@@ -2,7 +2,7 @@
 
 \usepackage{amsmath}
 \usepackage{amsfonts}
-
+\usepackage{graphicx}
 \title{Representing Penalties on Basis Expansions as a Polynomial In the Parameters (Working Title)}
 
 \begin{document}
@@ -49,7 +49,12 @@ There are other choices of basis besides monomials we could use. We could have a
 
 The first function is a constant function, the second is a ramp function based at $\tau$.
 
-
+\begin{figure}[t]
+	\centering
+	\includegraphics[scale = 0.5]{ramp_function.pdf}
+	\caption{The Ramp Function $\phi_2$}
+	\label{fig:ramp_function}
+\end{figure}
 
 
 

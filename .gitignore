@@ -1,0 +1,4 @@
+#ignore latex's genrated files
+*.aux
+*.swp
+*.log
