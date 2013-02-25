@@ -117,5 +117,27 @@ Note that this relies on the fact that the second derivative operator maps a lin
 
 \section{Non Linear Penalties}
 
+Suppose we believed that our data could be approximately modelled by and ODE of the form $f'' = f^2$ and we wished to incorporate this data into our model. It would be reasonable to include a penalty of the form:
 
+\[
+	\int_\mathit{D} (f''(t) - f(t)^")^2dt
+\]
+
+We can also represent this penalty as a quadratic form. As usual $f = \sum c_i\phi_i$. Expanding out the two terms in the penalty we get:
+
+\[
+	f''(t) = \sum_{i=0}^mc_i\phi_i(t)''
+\]
+
+\[
+	f(t)^2 = \sum_{i=0}^m\sum{j=0}^m\phi_i(t)\phi_j(t)
+\]
+
+Hence,
+
+\[
+	f''(t) - f(t)^2 = \sum_{i=0}^mc_i\phi(t)'' - \sum_{i=0}^m\sum_{j=0}^mc_ic_j\phi_i(t)\phi_j(t)
+\]
+
+Notice the second term is a two dimensional, finite sum. We now need to find norm. As before we can write this as an inner prouct: $\langle f'' - f^, f'' - f^2 \rangle$. The above expression is in the form $a_1\phi_1'' + \dots + a_m\phi_m'' +  b_{11}\phi_1\phi_1 + \dots b_{mm}\phi_m\phi_m$. This is a linear combination of a finite set of functions. So we can represent it as a quadratic form
 \end{document}
