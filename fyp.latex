@@ -142,6 +142,8 @@ As before we expand our estimated function $\hat{y}$ as a basis function expansi
 	\hat{y}(\mathbf{y}) = \sum_{i=1}^m c_i\phi(\mathbf(x))
 \]
 
+Notice that even though we are working in more than one dimension, our sum is still "one dimensional" in that it has only one index. This is deliberate as it makes our life much easier.
+
 Finding a least squares estimate is identical, so we will not cover it here.
 
 \subsection{Fitting the Displacement of a Membrance Using a Laplacian Penalty}
@@ -196,11 +198,7 @@ We define the matrix $\mathbf{\Phi}$ as before with $\mathbf{\Phi}_{ij} = \phi_j
 	PENSSE(c) = (\mathbf{y - \Phi c})'(\mathbf{y - \Phi c}) + \lambda \mathbf{c'Kc}
 \]
 
-It is worth noting that this identical to the expression we derived above. This is essential because both $frac{d^2}{dt^2}$ and $\Delta$ are linear operators.
-
-\subsection{Thin Plate Splines}
-
-In one dimensions the Laplacian penalty is identical is identical to the roughness penalty. It is not good for controlling how rough a function is though
+It is worth noting that this is identical to the expression we derived above. This is because both $\frac{d^2}{dt^2}$ and $\Delta$ are linear operators.
 
 \section{Non Linear Penalties}
 
@@ -226,5 +224,34 @@ Hence,
 	f''(t) - f(t)^2 = \sum_{i=0}^mc_i\phi(t)'' - \sum_{i=0}^m\sum_{j=0}^mc_ic_j\phi_i(t)\phi_j(t)
 \]
 
-Notice the second term is a two dimensional, finite sum. We now need to find norm. As before we can write this as an inner prouct: $\langle f'' - f^2, f'' - f^2 \rangle$. The above expression is in the form $a_1\phi_1'' + \dots + a_m\phi_m'' +  b_{11}\phi_1\phi_1 + \dots b_{mm}\phi_m\phi_m$. This is a linear combination of a finite set of functions. So we can represent it as a quadratic form
+Notice the second term is a two dimensional, finite sum. We now need to find norm. As before we can write this as an inner prouct: $\langle f'' - f^2, f'' - f^2 \rangle$. The above expression is in the form $a_1\phi_1'' + \dots + a_m\phi_m'' +  b_{11}\phi_1\phi_1 + \dots b_{mm}\phi_m\phi_m$. This is a linear combination of a finite set of functions. So we can represent it as a quadratic form. The form above is a little awkward to work with. We would like to have it vary with one index only, or combine the $\phi_i'''$ and the $\phi_i\phi_j$ together. We would define a function $\pi(n)$ that returns the appropriate function either some $\phi_i$ or $\phi_i\phi_j$ depending on the value. Defining such a function is tricky however. One function is as follows
+
+\[
+	\pi(k) = \begin{cases}
+		\phi_k'' & \text{if } k \leq m \\
+		\phi_{(k-1)|m}\phi_{(k-1) \bmod m} & \text{if } k > m 
+	\end{cases}
+\]
+
+Here $a|b$ is integer division, i.e $a|b = \operatorname{floor}(a/b)$.
+
+If we define $\psi_k(t)$ to be $\pi_k(t)$ and define a similar function $\sigma(i)$ for the coeffients we can define $f'' - f^2$ we get:
+
+\[
+	f'' - f^2 = \sum \sigma(i)\psi_i
+\]
+
+We now can express the penalty as a quadratic form:
+
+\[
+	\int_\mathit{D}(f(t)'' - f(t)^2)^2 dt =  \mathbf{\sigma(c)}'\mathbf{K}\mathbf{\sigma(c})
+\]
+
+Here $\mathbf{K}_{ij} = \langle \psi_i, \psi_j \rangle$ and $\mathbf{\sigma(c)} = (\sigma(1), \dots, \sigma(m + m^2)) = (c_1, \dots, c_m, c_1c_1, \dots, c_m c_m)$. The inner product is $\langle f, g \rangle = \int_\mathit{D} f(t)g(t)dt$. Since $\mathbf{\sigma(c)}$ is a second order polynomial in the $c_i$, the penalty is actually as fourth order polynomial in the $c_i$.
+
+We can write the Penalised Sum of Squared Errors in terms of the $c_i$:
+
+\[
+	PENSSE(\mathbf{c}) = \mathbf{(y - \Phi c)}'\mathbf{(y - \Phi c)} + \lambda \mathbf{\sigma(c)'K\sigma(c)}
+\]
 \end{document}
