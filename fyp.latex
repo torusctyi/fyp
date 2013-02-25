@@ -103,10 +103,10 @@ It is well known that the Least Squares gives us the \emph{Best Linear Unbiased 
 
 Here $\mathit{D}$ is our domain of interest and $f''$ stands for the second derivative of the function $f$. This criterion for fitting a curve is very appealing in many regards. It can be shown using the theory of Finite Elements that if we constrain $\hat{y}$ to pass through two points, then the $\hat{y}$ minimises the penalty is the best approximation to the straight line going through the points that we can form with this basis.
 
-This penalty can also be represented as a polynomial. Let $\langle f,g \rangle = \int_\mathit{D}f(t)g(t)dt$. We can see that $\langle \cdot, \cdot \rangle$ defines an inner product on $\L^2(\mathit{D})$, the set of square integrable functions on $\mathit{D}$. The penalty can be written in the form $PEN(f) = \langle f'', f''\rangle$. Substituting in the expansion for $f$ we get:
+This penalty can also be represented as a polynomial. Let $\langle f,g \rangle = \int_\mathit{D}f(t)g(t)dt$. We can see that $\langle \cdot, \cdot \rangle$ defines an inner product on $L^2(\mathit{D})$, the set of square integrable functions on $\mathit{D}$. The penalty can be written in the form $PEN(f) = \langle f'', f''\rangle$. Substituting in the expansion for $f$ we get:
 
 \begin{align*}
-	\langle \hat{f}'', \hat{f}'' \rangle &= \langle \sum_{i=1}^mc_i\phi_i'', \sum_{i=1}^mc_i\phi_i'' \rangle
+	\langle f'', f'' \rangle &= \langle \sum_{i=1}^mc_i\phi_i'', \sum_{i=1}^mc_i\phi_i'' \rangle
 					     &= \sum_{i=1}^m\sum_{j=1}^m\langle c_i\phi_i'', c_j\phi_j'' \rangle
 			                     &= \sum_{i=1}^m\sum_{j=1}^mc_ic_j\langle \phi_i'', \phi_j'' \rangle
 \end{align*}
@@ -115,12 +115,99 @@ We can see that the terms $\langle \phi_i'', \phi_j'' \rangle$ depend only on ou
 
 Note that this relies on the fact that the second derivative operator maps a linear combination of $\phi_i$ into a linear combination $\phi_i''$. We can always represent an inner product on some finite vector space as $\mathbf{b'Ab}$, where the terms depend on the problem at hand. We can simply construct the matrix $\mathbf{A}$ for the $\phi_i''$ and have the $\mathbf{c}$ in place of the $\mathbf{b}$ because differentiation is linear.
 
+
+\section{Penalised Least Squares}
+
+A roughness penalty on its own is not very useful; it does not make any use of the data at all. Therefore it is more commmon to use a hybrid approach. Instead of a least squares penalty, we have a \emph{Penalised Sum Of Squared Errors}.
+
+\[
+	PENSSE{f} = \sum_{i = 0}^n (y_i - f(t_i)^2 + \lambda \int_\mathit{D} [f(t)'']^2dt
+\]
+
+If we assume again that $f$ is the sum of basis functions, depending on a vector of coefficients  $\mathbf{\hat{c}}$; we can use the previous results to show that the Penalised Sum of Squares can be writen as the sum of two quadratic forms:
+
+\[
+	PENSSE(c) = (\mathbf{y - \Phi c})'(\mathbf{y - \Phi c}) + \lambda \mathbf{c}'\mathbf{Kc}
+\]
+
+Where $\mathbf{y}$, $\mathbf{K}$ and $\mathbf{\Phi}$ have the same definitions as they did before.
+
+\section{Multivariate Splines}
+
+What if our data is spatial in nature? In this case our data will often be at a series of points $\mathbf{x}_i = (x_i, y_i); i = 1, \dots ,n$. It is actually not too difficult to extend our results; it is almost as easy as replacing the $t_i$ with $\mathbf{x_i}$.
+
+As before we expand our estimated function $\hat{y}$ as a basis function expansion:
+
+\[
+	\hat{y}(\mathbf{y}) = \sum_{i=1}^m c_i\phi(\mathbf(x))
+\]
+
+Finding a least squares estimate is identical, so we will not cover it here.
+
+\subsection{Fitting the Displacement of a Membrance Using a Laplacian Penalty}
+
+On model of the mechanics of a membrane is the emph{wave equation}. Let $u(x,y,t)$ be the displacement of the membrane at position $(x,y)$ at time $t$. Then $u$ is assumed to satisfy the partial differential equation:
+
+\[
+	u_{tt} = c\Delta u
+\]
+
+Here $u_{tt} =  \frac{\partial^2u}{\partial t^2}$, $c$ is a parameter known as the wave speed and $\Delta$ is a differential operator known as the \emph{Laplacian}. In two dimensions it is defined as:
+
+\[
+	\Delta = \frac{\partial^2}{\partial x^2} + \frac{\partial^2}{\partial y^2}
+\]
+
+If the membrane doesn't move with time so $u_{tt} = 0$ then the wave equation reduces to \emph{Laplace's Equation}:
+
+\[
+	\Delta u = 0
+\]
+
+If we have measurements of the displacements at various points, this suggests that we use a penalised  model of the form:
+
+\[
+	PENSSE(f) = \sum_{i=0}^n(y_i - f(\mathbf{x}_i))^2 + \lambda \int_{\Omega}|\Delta f(\mathbf{x})|^2 \mathbf{dx}
+\]
+
+As before we can express this penalty as a quadratic form. Define an inner product on our functions by:
+
+\[
+	\langle f, g \rangle = \int_{\Omega} f(\mathbf{x})g(\mathbf{x})\mathbf{dx}
+\]
+
+Then the laplacian penalty can be written as
+
+\[
+	\int_{\Omega} |\Delta f(\mathbf{x})|^2 \mathbf{dx} = \langle \Delta f, \Delta f \rangle
+\]
+
+If $f = \sum c_i\phi_i$ then $\Delta f = \sum c_i \Delta \phi_i$. In the same manner as the previous roughness penalty, we can see that if f is a basis expansion then we can write the penalty as a polynomial in the coefficients:
+
+\[
+	\langle \Delta f, \Delta f \rangle = \sum_{i=1}^m\sum_{j=1}^m c_ic_j \langle \Delta \phi_i, \Delta \phi_j \rangle
+\]
+
+This can of course be written as $\mathbf{c'Kc}$ where $\mathbf{K}_{ij} = \langle \Delta \phi_i, \Delta \phi_j \rangle$.
+
+We define the matrix $\mathbf{\Phi}$ as before with $\mathbf{\Phi}_{ij} = \phi_j(\mathbf{x}_i)$, $\mathbf{c} = (c_1, \dots, c_m)$. We can then write the penalty in terms of the coefficients:
+
+\[
+	PENSSE(c) = (\mathbf{y - \Phi c})'(\mathbf{y - \Phi c}) + \lambda \mathbf{c'Kc}
+\]
+
+It is worth noting that this identical to the expression we derived above. This is essential because both $frac{d^2}{dt^2}$ and $\Delta$ are linear operators.
+
+\subsection{Thin Plate Splines}
+
+In one dimensions the Laplacian penalty is identical is identical to the roughness penalty. It is not good for controlling how rough a function is though
+
 \section{Non Linear Penalties}
 
 Suppose we believed that our data could be approximately modelled by and ODE of the form $f'' = f^2$ and we wished to incorporate this data into our model. It would be reasonable to include a penalty of the form:
 
 \[
-	\int_\mathit{D} (f''(t) - f(t)^")^2dt
+	\int_\mathit{D} (f''(t) - f(t)^2)^2dt
 \]
 
 We can also represent this penalty as a quadratic form. As usual $f = \sum c_i\phi_i$. Expanding out the two terms in the penalty we get:
@@ -130,7 +217,7 @@ We can also represent this penalty as a quadratic form. As usual $f = \sum c_i\p
 \]
 
 \[
-	f(t)^2 = \sum_{i=0}^m\sum{j=0}^m\phi_i(t)\phi_j(t)
+	f(t)^2 = \sum_{i=0}^m\sum_{j=0}^mc_ic_j\phi_i(t)\phi_j(t)
 \]
 
 Hence,
@@ -139,5 +226,5 @@ Hence,
 	f''(t) - f(t)^2 = \sum_{i=0}^mc_i\phi(t)'' - \sum_{i=0}^m\sum_{j=0}^mc_ic_j\phi_i(t)\phi_j(t)
 \]
 
-Notice the second term is a two dimensional, finite sum. We now need to find norm. As before we can write this as an inner prouct: $\langle f'' - f^, f'' - f^2 \rangle$. The above expression is in the form $a_1\phi_1'' + \dots + a_m\phi_m'' +  b_{11}\phi_1\phi_1 + \dots b_{mm}\phi_m\phi_m$. This is a linear combination of a finite set of functions. So we can represent it as a quadratic form
+Notice the second term is a two dimensional, finite sum. We now need to find norm. As before we can write this as an inner prouct: $\langle f'' - f^2, f'' - f^2 \rangle$. The above expression is in the form $a_1\phi_1'' + \dots + a_m\phi_m'' +  b_{11}\phi_1\phi_1 + \dots b_{mm}\phi_m\phi_m$. This is a linear combination of a finite set of functions. So we can represent it as a quadratic form
 \end{document}
