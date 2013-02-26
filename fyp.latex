@@ -254,4 +254,5 @@ We can write the Penalised Sum of Squared Errors in terms of the $c_i$:
 \[
 	PENSSE(\mathbf{c}) = \mathbf{(y - \Phi c)}'\mathbf{(y - \Phi c)} + \lambda \mathbf{\sigma(c)'K\sigma(c)}
 \]
+
 \end{document}
