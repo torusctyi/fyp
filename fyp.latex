@@ -1,42 +1,57 @@
-\documentclass{article}
+\documentclass[12pt, a4paper]{article}
 
 \usepackage{amsmath}
 \usepackage{amsfonts}
+\usepackage{vmargin}
+\usepackage{amsthm}
 \usepackage{graphicx}
+
+\theoremstyle{definition}
+\newtheorem{example}{Example}
+
+\theoremstyle{remark}
+\newtheorem*{remark}{Remark}
+
 \title{Representing Penalties on Basis Expansions as a Polynomial In the Parameters (Working Title)}
 
 \begin{document}
 \maketitle
 
-\section{Introduction To Basis Function Expansion Methods}
+\section{Basis Function Expansion Methods}
 
-One of the major fields in Statistics is that of fitting functions to data. A very large class of methods are known as \emph{Basis Function Expansion Methods}, where we estimate the output as a weighted sum of basis functions. These models generally take a form as follows:
+Fitting sophisticated mathematical functions ot empirical data continues to be a challenge in statistical science. One approach, known as the basis function expansion method , offers a considerable degree of flexibility and mathematically tractables solutions. This approach involves repseting a function $y(t)$ as finite number of basis functions $\{\phi_k(t)\}$ through the conditional expectation
 
 \[
-	\mathbb{E}[y|t] = c_0\phi_0(t) + c_1\phi_1(t) + \dots + c_N\phi_N(t)
+	\mathbb{E}[y|t] = c_0\phi_0(t) + c_1\phi_1(t) + \dots + c_N\phi_N(t),
 \]
 
-Here we have our finite set of basis functions $\{\phi_k\}$ along with our parameters $\{c_k\}$, $\mathbb{E}[y|x]$ is the conditional expectation of our independent variable $y$, given our dependent data $x$. Roughly $\mathbb{E}[y|x]$ can be thought of as our best estimate of the value of $y$ given $x$.
+
+where $\{c_k\}$ is a set of appropriately chosen coefficients. 
+\smallskip
+$\mathbb{E}[y|t]$ is the conditional expectation of our independent variable $y$, given our dependent data $x$. The conditional expectation $\mathbb{E}[y|t]$ is the estimate of $y$ dependending exclusively on $t$ that minimises the squared loss $\mathbb{E}[y(t) - E[y|t]]^2$. Unfortunately, this is a theoretical ideal, so me must make do with an estimate $\widehat{\mathbb{E}[y|t]}$ instead.
+
+\begin{example}Simple Linear Regression \end{example}
 
 Basis Function Methods might seem a little abstract, but they are ubiquitous. For example, Simple Linear Regression is an example of a basis function method. Take two basis functions $\{1, t\}$, so that $\hat{y}(t)$, our estimate of $y$ given the value $t$, can be written as a linear combination of the two:
 
 \[
-	\mathbb{E}[y|t] = \hat{y}(t) = c_0 + c_1t
+	\widehat{\mathbb{E}[y|t]} = \hat{y}(t) = c_0 + c_1t
 \]
 
-This is the form of a simple linear regression model. If our basis consists of just the single constant function $\phi(t) = 1$ then we get a model of the form:
+This is the form of a simple linear regression model. If our basis consists of just the single constant function $\phi(t) = 1$ then we get a model of the form
 
 \[
-	\hat{y} = c_0
+	\hat{y} = c_0.
 \]
 
-In this case we would generally use the mean or the median of the $y$ values as our estimate of $c_0$. If we go in the other direction and add a quadratic function $t^2$ we get a quadratic regression model:
+In this case we would generally use the mean of the $y$ values as our estimate of $c_0$. If we go in the other direction and add a quadratic function $t^2$ we get a quadratic regression model
 
 \[
-	\hat{y}(t) = c_0 + c_1t + c_2t^2
+	\widehat{y(t)} = c_0 + c_1t + c_2t^2.
 \]
 
-There are other choices of basis besides monomials we could use. We could have a basis of two functions $\{\phi_1, \phi_2\}$ Where the two functions are defined as follows:
+\begin{example}Ramp Functions\end{example}
+There are other choices of basis besides monomials we could use. We could have a basis of two functions $\{\phi_1, \phi_2\}$ Where the two functions are defined as follows
 
 \begin{align*}
 	\phi_1(t) &= 1 \\
@@ -44,7 +59,7 @@ There are other choices of basis besides monomials we could use. We could have a
 		\begin{cases}
 			0 & \text{if } t < \tau \\
                  t - \tau & \text{if } t \geq \tau
-		\end{cases}
+		\end{cases}.
 \end{align*}
 
 The first function is a constant function, the second is a ramp function based at $\tau$.
@@ -52,82 +67,102 @@ The first function is a constant function, the second is a ramp function based a
 \begin{figure}[t]
 	\centering
 	\includegraphics[scale = 0.5]{ramp_function.pdf}
-	\caption{The Ramp Function $\phi_2$}
+	\caption{The ramp function $\phi_2.$}
 	\label{fig:ramp_function}
 \end{figure}
 
-The above basis has two disadvantages though. Firstly the second basis function is only continuous, not differentiable. It would not be wise to use this basis if we wanted to estimate $\frac{dy}{dt}$. Secondly it is very arbitrary, it is not obvious why it would be useful 
+\smallskip
 
-This underscores an important point. Real Analysis tells us that there are many sets of functions that are \emph{dense} on some interval$[a,b]$, that is they can approximate any function on $[a,b]$ to arbitrary accuracy. We must be sensible in our choice of basis. If our choice of basis is good, then it will be able to fit the data with only a few terms, and we might be able to avoid estimating many coefficients. This is one of the reasons simple linear regression and quadratic regression are useful; they can capture much variation in the observed data in spite of being very simple.
+This basis would work very well for representing data which starts to increase linearly past a certain threshold. Ramp functions and constant functions are very cheap computationally, meaning we can spawn compartively a very large number of them. This could be used to cover situations where there data is unchanging over relatively long periods.
 
-\subsection{Fourier Basis Functions}
-If our data has a periodic component to it, such as the observed temperature over the course of the year, or a time series of annual sales, then it would be wise to use a basis consisting of periodic functions. This suggests that we should use a \emph{Fourier Basis} consisting of the set of functions $\{cos(n\omega t), sin(n\omega t)\}$ where $0 \leq n \leq N$ for some $N$ and $\omega$ is the frequency. The frequency depends on our time scale, they are related by the formula $\omega = \frac{2\pi}{T}$, where $T$ is the period. 
+\smallskip
 
-Furthermore Fourier basis functions have several other desirable properties. They are smooth, meaning that they can be used to estimate any derivivative of the data, at leastin theory. They are orthogonal, which can make certain problems more convienient and they are closed under differentiation, meaning that the derivative of a combination of Fourier basis functions, is itself a combination of Fourier basis functions. The latter two properties will prove very useful later, as we shall see.
+The above basis has two disadvantages though. Firstly the second basis function is only continuous, not differentiable. It would not be wise to use this basis if we wanted to estimate $\mathrm{d}y/\mathrm{d}t$. Secondly it is very arbitrary. It is not obvious why it would be useful compared to a quadratic model for example; the latter also allows to us estimate derivatives of all orders and can still acommodate data which varies in its rate of change.
 
-\subsection{B Spline Basis Functions}
+\smallskip
 
-Roughly speaking, \emph{B Splines} are compactly supported polynomial functions, or more practically they are nonzero only inside of a given interval. More formally a B-Spline basis consists of a \emph{degree} $n$, which determines the degree of the basis functions, and a set of \emph{knots}, that is a set of $K$ time points $\{t_0, \dots, t_K\}$. 
+This underscores an important point. There are many types of basis besides the ones usually encountered, such as polynomial bases. Many of them are fungible from the pure mathematical point of view in terms of how well they can fit a function. The statistician should make a sensible choice of basis. If our choice of basis is good, then it will be able to fit the data with only a few terms, and we might be able to avoid estimating many coefficients. This is one of the reasons simple linear regression and quadratic regression are useful; they can capture much variation in the observed data in spite of being very simple.
+
+\begin{example}Fourier Basis Functions\end{example}
+If our data has a periodic component to it, such as the observed temperature over the course of the year, or a time series of annual sales, then it would be wise to use a basis consisting of periodic functions. This suggests that we should use a Fourier basis consisting of the set of functions $\{\cos(n\omega t), \sin(n\omega t)\}$ where $0 \leq n \leq N$ for some $N$ and $\omega$ is the frequency. The frequency depends on our time scale, they are related by the formula $\omega = \frac{2\pi}{T}$, where $T$ is the period. 
+
+\smallskip
+
+Furthermore Fourier basis functions have several other desirable properties. They are smooth, meaning that they can be used to estimate any derivivative of the data, at leastin theory. They are orthogonal, which can make certain problems more convienient and they are closed under differentiation, meaning that the derivative of a combination of Fourier basis functions, is itself a combination of Fourier basis functions. The latter two properties will prove very useful later, as we shall see. 
+
+\smallskip
+
+A Fourier basis can represent a massive class of functions; any square integrable function on some interval can be represented by them. They cannot detect how frequencies change in space however, only their global behaviour. They can also be somewhat mundane - almost certain to work, but unlikely to provide anything too interesting.
+\begin{example}B-spline Basis Functions\end{example}
+
+Roughly speaking, B-splines are compactly supported polynomial functions, or more practically they are nonzero only inside of a given interval. More formally a B-Spline basis consists of a degree $n$, which determines the degree of the basis functions, and a set of knots, that is a set of $K$ time points $\{t_0, \dots, t_K\}$. 
+
+\smallskip
 
 Since they are compact they generally can only indvidually capture local information about the data. One of the main advantages of B Splines is that they can represent any other spline of the same degree and smoothness with the same knots. This makes them useful for Statistics since they assume less about the form of the data, they can help us avoid bias.
 
 \section{Least Squares Fitting}
 
-Least Squares is one of the most well known statistical estimation techniques. If we have a set of $n$ observations $y_i$, measured at times $t_i$, then the \emph{Least Squares Criterion}, chooses the estimated function $\hat{y}$ from some set of functions $\mathit{S}$ that minimises the sum of the squares of the error:
+Least Squares is one of the most well known statistical estimation techniques. If we have a set of $n$ observations $y_i$, measured at times $t_i$, then the least squares criterion, chooses the estimated function $\hat{y}$ from some set of functions $\mathit{S}$ that minimises the sum of the squares of the error
 
 \[
-	\hat{y(t)} = \underset{f \in \mathit{S}}{\operatorname{argmin}}\sum_{i = 1}^n (y_i - f(t_i))^2
+	\widehat{y(t)} = \underset{f \in \mathit{S}}{\operatorname{argmin}}\sum_{i = 1}^n [y_i - f(t_i)]^2.
 \]
 
-We assume $\mathit{S}$ is the span of some set of $m$ basis functions i.e $\mathit{s} = \{\sum_{i = 1}^mc_i\phi_i(t)| c_i \in \mathbb{R}\}$. This suggests that to find $\hat{y}$ we only need to estimate to coefficients $\hat{c}_i$. Then  we have completely deterimined $\hat{y}$. We can then write the least squares criterion as:
+We assume $\mathit{S}$ is the span of some set of $m$ basis functions i.e $\mathit{S} = \{\sum_{i = 1}^mc_i\phi_i(t)| c_i \in \mathbb{R}\}$. This suggests that to find $\hat{y}$ we only need to estimate to coefficients $\hat{c}_i$. Then  we have completely deterimined $\hat{y}$. We can then write the least squares criterion as:
 
 \[
-	(\hat{c}_1, \dots, \hat{c}_m)  = \underset{c_1 \dots c_K}{\operatorname{argmin}} \sum_{i=1}^n(y_i - \sum_{j=1}^m c_j\phi_j(t_i))^2
+	(\hat{c}_1, \dots, \hat{c}_m)  = \underset{c_1 \dots c_K}{\operatorname{argmin}} \sum_{i=1}^n[y_i - \sum_{j=1}^m c_j\phi_j(t_i)]^2
 \]
 
-The above expression is cumbersome, we can use vector notation to simplify it. Firstly, we  have $f(t) = \mathbf{c'\phi(t)}$, where $\mathbf{c} = (c_1,..., c_m)$ and $\mathbf{\phi} = (\phi_1(t), \dots, \phi_2(t))'$. If we construct a matrix $\mathbf{\Phi}$, where the $i$th row of $\mathbf{\Phi}$ is $\mathbf{\phi}(t_i)$, and let $\mathbf{y} = (y_1, \dots, y_n)$ we can write the least squares problem as:
+The above expression is cumbersome, we can use vector notation to simplify it. Firstly, we  have $f(t) = \mathbf{c'\phi(t)}$, where $\mathbf{c} = (c_1,..., c_m)$ and $\mathbf{\phi} = (\phi_1(t), \dots, \phi_2(t))'$. If we construct a matrix $\mathbf{\Phi}$, where the $i$th row of $\mathbf{\Phi}$ is $\mathbf{\phi}(t_i)$, and let $\mathbf{y} = (y_1, \dots, y_n)$ we can write the least squares problem as
 
 \[
-	\mathbf{\hat{c}} = \underset{\mathbf{c} \in \mathbb{R}^m}{\operatorname{argmin}} (\mathbf{y - \Phi c})'(\mathbf{y - \Phi c})
+	\hat{\mathbf{c}} = \underset{\mathbf{c} \in \mathbb{R}^m}{\operatorname{argmin}} (\mathbf{y - \Phi c})'(\mathbf{y - \Phi c}).
 \]
 
 The expression on the right hand side is an example of a \emph{Quadratic Form}, they are the generalisation of quadratic functions to finite dimensional vector spaces. We can have quadratic forms on infinite dimensional vectors spaces too, but that is not relevant here.
 
 \section{Roughness Penalties}
 
-It is well known that the Least Squares gives us the \emph{Best Linear Unbiased Estimator} for $\mathbf{y}$ the function we assume to be generating the data. Nonetheless it is often useful to employ a form of \emph{regularisation} which constrains how much $\hat{y}$ is allowed to vary. Intuitively, this reduces the \emph{variance} of $\hat{y}$ and helps guard against overfitting. In the context of basis function expansions, the most commonly used penalty is the curvature penalty:
+It is well known that the Least Squares gives us the \emph{Best Linear Unbiased Estimator} for $\mathbf{y}$ the function we assume to be generating the data. Nonetheless it is often useful to employ a form of \emph{regularisation} which constrains how much $\hat{y}$ is allowed to vary. Intuitively, this reduces the \emph{variance} of $\hat{y}$ and helps guard against overfitting. In the context of basis function expansions, the most commonly used penalty is the curvature penalty
 
 \[
-	PEN(\hat{y}) = 	\int_\mathit{D}[\hat{y}(t)'']^2dt
+	PEN(\hat{y}) = 	\int_\mathit{D}[\widehat{y(t)''}]^2\mathrm{d}t.
 \]
 
-Here $\mathit{D}$ is our domain of interest and $f''$ stands for the second derivative of the function $f$. This criterion for fitting a curve is very appealing in many regards. It can be shown using the theory of Finite Elements that if we constrain $\hat{y}$ to pass through two points, then the $\hat{y}$ minimises the penalty is the best approximation to the straight line going through the points that we can form with this basis.
+Here $\mathit{D}$ is our domain of interest and $f''$ stands for the second derivative of the function $f.$ This criterion for fitting a curve is very appealing in many regards. It can be shown using the theory of Finite Elements that if we constrain $\hat{y}$ to pass through two points, then the $\hat{y}$ minimises the penalty is the best approximation to the straight line going through the points that we can form with this basis.
 
-This penalty can also be represented as a polynomial. Let $\langle f,g \rangle = \int_\mathit{D}f(t)g(t)dt$. We can see that $\langle \cdot, \cdot \rangle$ defines an inner product on $L^2(\mathit{D})$, the set of square integrable functions on $\mathit{D}$. The penalty can be written in the form $PEN(f) = \langle f'', f''\rangle$. Substituting in the expansion for $f$ we get:
+\smallskip
+
+This penalty can also be represented as a polynomial. Let $\langle f,g \rangle = \int_\mathit{D}f(t)g(t)\mathrm{d}t.$ We can see that $\langle \cdot, \cdot \rangle$ defines an inner product on $L^2(\mathit{D})$, the set of square integrable functions on $\mathit{D}.$ The penalty can be written in the form $PEN(f) = \langle f'', f''\rangle$. Substituting in the expansion for $f$ we get
 
 \begin{align*}
 	\langle f'', f'' \rangle &= \langle \sum_{i=1}^mc_i\phi_i'', \sum_{i=1}^mc_i\phi_i'' \rangle
 					     &= \sum_{i=1}^m\sum_{j=1}^m\langle c_i\phi_i'', c_j\phi_j'' \rangle
-			                     &= \sum_{i=1}^m\sum_{j=1}^mc_ic_j\langle \phi_i'', \phi_j'' \rangle
+			                     &= \sum_{i=1}^m\sum_{j=1}^mc_ic_j\langle \phi_i'', \phi_j'' \rangle.
 \end{align*}
 
-We can see that the terms $\langle \phi_i'', \phi_j'' \rangle$ depend only on our choice of basis and so are "fixed" for our purposes. This implies that the penalty can be represented as a polynomial in the $c_i$. We can do better however and represent the penalty as a quadratic form. If we define an $m \times m$ matrix $\mathbf{K}$ by $\mathbf{K}_ij = \langle \phi_i'', \phi_j'' \rangle$ it can be seen that $\langle f'', f'' \rangle = \mathbf{c'Kc}$.  
+We can see that the terms $\langle \phi_i'', \phi_j'' \rangle$ depend only on our choice of basis and so are ``fixed''
+for our purposes. This implies that the penalty can be represented as a polynomial in the $c_i$. We can do better however and represent the penalty as a quadratic form. If we define an $m \times m$ matrix $\mathbf{K}$ by $\mathbf{K}_{ij} = \langle \phi_i'', \phi_j'' \rangle$ it can be seen that $\langle f'', f'' \rangle = \mathbf{c'Kc}$.  
+
+\smallskip
 
 Note that this relies on the fact that the second derivative operator maps a linear combination of $\phi_i$ into a linear combination $\phi_i''$. We can always represent an inner product on some finite vector space as $\mathbf{b'Ab}$, where the terms depend on the problem at hand. We can simply construct the matrix $\mathbf{A}$ for the $\phi_i''$ and have the $\mathbf{c}$ in place of the $\mathbf{b}$ because differentiation is linear.
 
 
 \section{Penalised Least Squares}
 
-A roughness penalty on its own is not very useful; it does not make any use of the data at all. Therefore it is more commmon to use a hybrid approach. Instead of a least squares penalty, we have a \emph{Penalised Sum Of Squared Errors}.
+We have two distinct, but compelling objectives. We want a fit $\hat{y}$ that maintains fidelity to the data, as represented by the goodness of fit, but simultaneously adheres to the requirement of a smooth description of the data. The solution is to use a combination of the two penalties, the penalised sum of squared errors
 
 \[
-	PENSSE{f} = \sum_{i = 0}^n (y_i - f(t_i)^2 + \lambda \int_\mathit{D} [f(t)'']^2dt
+	PENSSE(f) = \sum_{i = 0}^n (y_i - f(t_i)^2 + \lambda \int_\mathit{D} [f(t)'']^2\mathrm{d}t.
 \]
 
 If we assume again that $f$ is the sum of basis functions, depending on a vector of coefficients  $\mathbf{\hat{c}}$; we can use the previous results to show that the Penalised Sum of Squares can be writen as the sum of two quadratic forms:
 
 \[
-	PENSSE(c) = (\mathbf{y - \Phi c})'(\mathbf{y - \Phi c}) + \lambda \mathbf{c}'\mathbf{Kc}
+	PENSSE(c) = (\mathbf{y - \Phi c})'(\mathbf{y - \Phi c}) + \lambda \mathbf{c}'\mathbf{Kc}.
 \]
 
 Where $\mathbf{y}$, $\mathbf{K}$ and $\mathbf{\Phi}$ have the same definitions as they did before.
@@ -136,66 +171,78 @@ Where $\mathbf{y}$, $\mathbf{K}$ and $\mathbf{\Phi}$ have the same definitions a
 
 What if our data is spatial in nature? In this case our data will often be at a series of points $\mathbf{x}_i = (x_i, y_i); i = 1, \dots ,n$. It is actually not too difficult to extend our results; it is almost as easy as replacing the $t_i$ with $\mathbf{x_i}$.
 
-As before we expand our estimated function $\hat{y}$ as a basis function expansion:
+\smallskip
+
+As before we expand our function $y$ as a basis function expansion
 
 \[
-	\hat{y}(\mathbf{y}) = \sum_{i=1}^m c_i\phi(\mathbf(x))
+	y(\mathbf{x}) = \sum_{i=1}^m c_i\phi(\mathbf{x}).
 \]
 
 Notice that even though we are working in more than one dimension, our sum is still "one dimensional" in that it has only one index. This is deliberate as it makes our life much easier.
 
+
+\smallskip
+
 Finding a least squares estimate is identical, so we will not cover it here.
 
-\subsection{Fitting the Displacement of a Membrance Using a Laplacian Penalty}
+\newpage
+
+\begin{example}Fitting the Displacement of a Membrance Using a Laplacian Penalty\end{example}
 
 On model of the mechanics of a membrane is the emph{wave equation}. Let $u(x,y,t)$ be the displacement of the membrane at position $(x,y)$ at time $t$. Then $u$ is assumed to satisfy the partial differential equation:
 
 \[
-	u_{tt} = c\Delta u
+	u_{tt} = c\Delta u.
 \]
 
-Here $u_{tt} =  \frac{\partial^2u}{\partial t^2}$, $c$ is a parameter known as the wave speed and $\Delta$ is a differential operator known as the \emph{Laplacian}. In two dimensions it is defined as:
+Here $u_{tt} =  \frac{\partial^2u}{\partial t^2}$, $c$ is a parameter known as the wave speed and $\Delta$ is a differential operator known as the Laplacian. In two dimensions it is defined as
 
 \[
-	\Delta = \frac{\partial^2}{\partial x^2} + \frac{\partial^2}{\partial y^2}
+	\Delta = \frac{\partial^2}{\partial x^2} + \frac{\partial^2}{\partial y^2}.
 \]
 
-If the membrane doesn't move with time so $u_{tt} = 0$ then the wave equation reduces to \emph{Laplace's Equation}:
+If the membrane doesn't move with time so $u_{tt} = 0$ then the wave equation reduces to Laplace's equation
 
 \[
-	\Delta u = 0
+	\Delta u = 0.
 \]
 
-If we have measurements of the displacements at various points, this suggests that we use a penalised  model of the form:
+This is what is known as a steady state model, notice the coefficient $c$ has disappeared.
+\smallskip
+
+If we have measurements of the displacements at various points, this suggests that we use a penalised  model of the form
 
 \[
-	PENSSE(f) = \sum_{i=0}^n(y_i - f(\mathbf{x}_i))^2 + \lambda \int_{\Omega}|\Delta f(\mathbf{x})|^2 \mathbf{dx}
+	PENSSE(f) = \sum_{i=0}^n(y_i - f(\mathbf{x}_i))^2 + \lambda \int_{\Omega}|\Delta f(\mathbf{x})|^2 \mathbf{dx}.
 \]
 
-As before we can express this penalty as a quadratic form. Define an inner product on our functions by:
+As before we can express this penalty as a quadratic form. Define an inner product on our functions by
 
 \[
-	\langle f, g \rangle = \int_{\Omega} f(\mathbf{x})g(\mathbf{x})\mathbf{dx}
+	\langle f, g \rangle = \int_{\Omega} f(\mathbf{x})g(\mathbf{x})\mathbf{dx}.
 \]
 
 Then the laplacian penalty can be written as
 
 \[
-	\int_{\Omega} |\Delta f(\mathbf{x})|^2 \mathbf{dx} = \langle \Delta f, \Delta f \rangle
+	\int_{\Omega} |\Delta f(\mathbf{x})|^2 \mathbf{dx} = \langle \Delta f, \Delta f \rangle.
 \]
 
-If $f = \sum c_i\phi_i$ then $\Delta f = \sum c_i \Delta \phi_i$. In the same manner as the previous roughness penalty, we can see that if f is a basis expansion then we can write the penalty as a polynomial in the coefficients:
+If $f = \sum c_i\phi_i$ then $\Delta f = \sum c_i \Delta \phi_i$. In the same manner as the previous roughness penalty, we can see that if f is a basis expansion then we can write the penalty as a polynomial in the coefficients
 
 \[
-	\langle \Delta f, \Delta f \rangle = \sum_{i=1}^m\sum_{j=1}^m c_ic_j \langle \Delta \phi_i, \Delta \phi_j \rangle
+	\langle \Delta f, \Delta f \rangle = \sum_{i=1}^m\sum_{j=1}^m c_ic_j \langle \Delta \phi_i, \Delta \phi_j \rangle.
 \]
 
-This can of course be written as $\mathbf{c'Kc}$ where $\mathbf{K}_{ij} = \langle \Delta \phi_i, \Delta \phi_j \rangle$.
+This can of course be written as $\mathbf{c'Kc}$ where $\mathbf{K}_{ij} = \langle \Delta \phi_i, \Delta \phi_j \rangle.$
 
-We define the matrix $\mathbf{\Phi}$ as before with $\mathbf{\Phi}_{ij} = \phi_j(\mathbf{x}_i)$, $\mathbf{c} = (c_1, \dots, c_m)$. We can then write the penalty in terms of the coefficients:
+\smallskip
+
+We define the matrix $\mathbf{\Phi}$ as before with $\mathbf{\Phi}_{ij} = \phi_j(\mathbf{x}_i)$, $\mathbf{c} = (c_1, \dots, c_m)$. We can then write the penalty in terms of the coefficients
 
 \[
-	PENSSE(c) = (\mathbf{y - \Phi c})'(\mathbf{y - \Phi c}) + \lambda \mathbf{c'Kc}
+	PENSSE(c) = (\mathbf{y - \Phi c})'(\mathbf{y - \Phi c}) + \lambda \mathbf{c'Kc}.
 \]
 
 It is worth noting that this is identical to the expression we derived above. This is because both $\frac{d^2}{dt^2}$ and $\Delta$ are linear operators.
@@ -205,23 +252,23 @@ It is worth noting that this is identical to the expression we derived above. Th
 Suppose we believed that our data could be approximately modelled by and ODE of the form $f'' = f^2$ and we wished to incorporate this data into our model. It would be reasonable to include a penalty of the form:
 
 \[
-	\int_\mathit{D} (f''(t) - f(t)^2)^2dt
+	\int_\mathit{D} (f''(t) - f(t)^2)^2\mathrm{dt}
 \]
 
-We can also represent this penalty as a quadratic form. As usual $f = \sum c_i\phi_i$. Expanding out the two terms in the penalty we get:
+We can also represent this penalty as a quadratic form. As usual $f = \sum c_i\phi_i$. Expanding out the two terms in the penalty we get
 
 \[
 	f''(t) = \sum_{i=0}^mc_i\phi_i(t)''
 \]
 
 \[
-	f(t)^2 = \sum_{i=0}^m\sum_{j=0}^mc_ic_j\phi_i(t)\phi_j(t)
+	f(t)^2 = \sum_{i=0}^m\sum_{j=0}^mc_ic_j\phi_i(t)\phi_j(t).
 \]
 
 Hence,
 
 \[
-	f''(t) - f(t)^2 = \sum_{i=0}^mc_i\phi(t)'' - \sum_{i=0}^m\sum_{j=0}^mc_ic_j\phi_i(t)\phi_j(t)
+	f''(t) - f(t)^2 = \sum_{i=0}^mc_i\phi(t)'' - \sum_{i=0}^m\sum_{j=0}^mc_ic_j\phi_i(t)\phi_j(t).
 \]
 
 Notice the second term is a two dimensional, finite sum. We now need to find norm. As before we can write this as an inner prouct: $\langle f'' - f^2, f'' - f^2 \rangle$. The above expression is in the form $a_1\phi_1'' + \dots + a_m\phi_m'' +  b_{11}\phi_1\phi_1 + \dots b_{mm}\phi_m\phi_m$. This is a linear combination of a finite set of functions. So we can represent it as a quadratic form. The form above is a little awkward to work with. We would like to have it vary with one index only, or combine the $\phi_i'''$ and the $\phi_i\phi_j$ together. We would define a function $\pi(n)$ that returns the appropriate function either some $\phi_i$ or $\phi_i\phi_j$ depending on the value. Defining such a function is tricky however. One function is as follows
@@ -234,6 +281,8 @@ Notice the second term is a two dimensional, finite sum. We now need to find nor
 \]
 
 Here $a|b$ is integer division, i.e $a|b = \operatorname{floor}(a/b)$.
+
+\smallskip
 
 If we define $\psi_k(t)$ to be $\pi_k(t)$ and define a similar function $\sigma(i)$ for the coeffients we can define $f'' - f^2$ we get:
 
@@ -249,10 +298,21 @@ We now can express the penalty as a quadratic form:
 
 Here $\mathbf{K}_{ij} = \langle \psi_i, \psi_j \rangle$ and $\mathbf{\sigma(c)} = (\sigma(1), \dots, \sigma(m + m^2)) = (c_1, \dots, c_m, c_1c_1, \dots, c_m c_m)$. The inner product is $\langle f, g \rangle = \int_\mathit{D} f(t)g(t)dt$. Since $\mathbf{\sigma(c)}$ is a second order polynomial in the $c_i$, the penalty is actually as fourth order polynomial in the $c_i$.
 
+\smallskip
+
 We can write the Penalised Sum of Squared Errors in terms of the $c_i$:
 
 \[
 	PENSSE(\mathbf{c}) = \mathbf{(y - \Phi c)}'\mathbf{(y - \Phi c)} + \lambda \mathbf{\sigma(c)'K\sigma(c)}
 \]
 
+\begin{remark}Alternative Representation Of The Penalty\end{remark}
+
+It is difficult to deal with the indexing above. An alternative is to break the function into two parts $f = f' + f^2$ where $f' = \sum c_k \phi_k'$ and $f^2 = \sum c_{k}c_{l}\phi_{k}\phi_{l}.$ Since $\langle f', f^2 \rangle = \langle f^2, f'$. We can represent the penalty in the form of the sum of three parts
+
+\[
+	\langle f' + f^2, f' + f^2 \rangle = \mathbf{c'Kc} + 2\mathbf{c'Lb} + \mathbf{b'Mb}.
+\]
+
+Here $\mathbf{K}_{ij} = \langle \phi_i', \phi_j' \rangle.$ $\mathbf{L}$ and $\mathbf{M}$ similarly represent $\langle f', f^2 \rangle$ and $\langle f^2, f^2 \rangle$. 
 \end{document}
