@@ -19,7 +19,7 @@
 
 \section{Basis Function Expansion Methods}
 
-Fitting sophisticated mathematical functions ot empirical data continues to be a challenge in statistical science. One approach, known as the basis function expansion method , offers a considerable degree of flexibility and mathematically tractables solutions. This approach involves repseting a function $y(t)$ as finite number of basis functions $\{\phi_k(t)\}$ through the conditional expectation
+Fitting sophisticated mathematical functions to empirical data continues to be a challenge in statistical science. One approach, known as the basis function expansion method , offers a considerable degree of flexibility and mathematically tractable solutions. This approach involves representing a function $y(t)$ as finite number of basis functions $\{\phi_k(t)\}$ through the conditional expectation
 
 \[
 	\mathbb{E}[y|t] = c_0\phi_0(t) + c_1\phi_1(t) + \dots + c_N\phi_N(t),
@@ -28,7 +28,7 @@ Fitting sophisticated mathematical functions ot empirical data continues to be a
 
 where $\{c_k\}$ is a set of appropriately chosen coefficients. 
 \smallskip
-$\mathbb{E}[y|t]$ is the conditional expectation of our independent variable $y$, given our dependent data $x$. The conditional expectation $\mathbb{E}[y|t]$ is the estimate of $y$ dependending exclusively on $t$ that minimises the squared loss $\mathbb{E}[y(t) - E[y|t]]^2$. Unfortunately, this is a theoretical ideal, so me must make do with an estimate $\widehat{\mathbb{E}[y|t]}$ instead.
+$\mathbb{E}[y|t]$ is the conditional expectation of our independent variable $y$, given our dependent data $x$. The conditional expectation $\mathbb{E}[y|t]$ is the estimate of $y$ depending exclusively on $t$ that minimises the squared loss $\mathbb{E}[y(t) - E[y|t]]^2$. Unfortunately, this is a theoretical ideal, so me must make do with an estimate $\widehat{\mathbb{E}[y|t]}$ instead.
 
 \begin{example}Simple Linear Regression \end{example}
 
@@ -73,11 +73,11 @@ The first function is a constant function, the second is a ramp function based a
 
 \smallskip
 
-This basis would work very well for representing data which starts to increase linearly past a certain threshold. Ramp functions and constant functions are very cheap computationally, meaning we can spawn compartively a very large number of them. This could be used to cover situations where there data is unchanging over relatively long periods.
+This basis would work very well for representing data which starts to increase linearly past a certain threshold. Ramp functions and constant functions are very cheap computationally, meaning we can spawn comparatively a very large number of them. This could be used to cover situations where there data is unchanging over relatively long periods.
 
 \smallskip
 
-The above basis has two disadvantages though. Firstly the second basis function is only continuous, not differentiable. It would not be wise to use this basis if we wanted to estimate $\mathrm{d}y/\mathrm{d}t$. Secondly it is very arbitrary. It is not obvious why it would be useful compared to a quadratic model for example; the latter also allows to us estimate derivatives of all orders and can still acommodate data which varies in its rate of change.
+The above basis has two disadvantages though. Firstly the second basis function is only continuous, not differentiable. It would not be wise to use this basis if we wanted to estimate $\mathrm{d}y/\mathrm{d}t$. Secondly it is very arbitrary. It is not obvious why it would be useful compared to a quadratic model for example; the latter also allows to us estimate derivatives of all orders and can still accommodate data which varies in its rate of change.
 
 \smallskip
 
@@ -88,7 +88,7 @@ If our data has a periodic component to it, such as the observed temperature ove
 
 \smallskip
 
-Furthermore Fourier basis functions have several other desirable properties. They are smooth, meaning that they can be used to estimate any derivivative of the data, at leastin theory. They are orthogonal, which can make certain problems more convienient and they are closed under differentiation, meaning that the derivative of a combination of Fourier basis functions, is itself a combination of Fourier basis functions. The latter two properties will prove very useful later, as we shall see. 
+Furthermore Fourier basis functions have several other desirable properties. They are smooth, meaning that they can be used to estimate any derivative of the data, at least in theory. They are orthogonal, which can make certain problems more convenient and they are closed under differentiation, meaning that the derivative of a combination of Fourier basis functions, is itself a combination of Fourier basis functions. The latter two properties will prove very useful later, as we shall see. 
 
 \smallskip
 
@@ -99,7 +99,7 @@ Roughly speaking, B-splines are compactly supported polynomial functions, or mor
 
 \smallskip
 
-Since they are compact they generally can only indvidually capture local information about the data. One of the main advantages of B Splines is that they can represent any other spline of the same degree and smoothness with the same knots. This makes them useful for Statistics since they assume less about the form of the data, they can help us avoid bias.
+Since they are compact they generally can only individually capture local information about the data. One of the main advantages of B Splines is that they can represent any other spline of the same degree and smoothness with the same knots. This makes them useful for Statistics since they assume less about the form of the data, they can help us avoid bias.
 
 \section{Least Squares Fitting}
 
@@ -109,7 +109,7 @@ Least Squares is one of the most well known statistical estimation techniques. I
 	\widehat{y(t)} = \underset{f \in \mathit{S}}{\operatorname{argmin}}\sum_{i = 1}^n [y_i - f(t_i)]^2.
 \]
 
-We assume $\mathit{S}$ is the span of some set of $m$ basis functions i.e $\mathit{S} = \{\sum_{i = 1}^mc_i\phi_i(t)| c_i \in \mathbb{R}\}$. This suggests that to find $\hat{y}$ we only need to estimate to coefficients $\hat{c}_i$. Then  we have completely deterimined $\hat{y}$. We can then write the least squares criterion as:
+We assume $\mathit{S}$ is the span of some set of $m$ basis functions i.e. $\mathit{S} = \{\sum_{i = 1}^mc_i\phi_i(t)| c_i \in \mathbb{R}\}$. This suggests that to find $\hat{y}$ we only need to estimate to coefficients $\hat{c}_i$. Then  we have completely determined $\hat{y}$. We can then write the least squares criterion as:
 
 \[
 	(\hat{c}_1, \dots, \hat{c}_m)  = \underset{c_1 \dots c_K}{\operatorname{argmin}} \sum_{i=1}^n[y_i - \sum_{j=1}^m c_j\phi_j(t_i)]^2
@@ -159,7 +159,7 @@ We have two distinct, but compelling objectives. We want a fit $\hat{y}$ that ma
 	PENSSE(f) = \sum_{i = 0}^n (y_i - f(t_i)^2 + \lambda \int_\mathit{D} [f(t)'']^2\mathrm{d}t.
 \]
 
-If we assume again that $f$ is the sum of basis functions, depending on a vector of coefficients  $\mathbf{\hat{c}}$; we can use the previous results to show that the Penalised Sum of Squares can be writen as the sum of two quadratic forms:
+If we assume again that $f$ is the sum of basis functions, depending on a vector of coefficients  $\mathbf{\hat{c}}$; we can use the previous results to show that the Penalised Sum of Squares can be written as the sum of two quadratic forms:
 
 \[
 	PENSSE(c) = (\mathbf{y - \Phi c})'(\mathbf{y - \Phi c}) + \lambda \mathbf{c}'\mathbf{Kc}.
@@ -188,9 +188,9 @@ Finding a least squares estimate is identical, so we will not cover it here.
 
 \newpage
 
-\begin{example}Fitting the Displacement of a Membrance Using a Laplacian Penalty\end{example}
+\begin{example}Fitting the Displacement of a Membrane Using a Laplacian Penalty\end{example}
 
-On model of the mechanics of a membrane is the emph{wave equation}. Let $u(x,y,t)$ be the displacement of the membrane at position $(x,y)$ at time $t$. Then $u$ is assumed to satisfy the partial differential equation:
+On model of the mechanics of a membrane is the wave equation. Let $u(x,y,t)$ be the displacement of the membrane at position $(x,y)$ at time $t$. Then $u$ is assumed to satisfy the partial differential equation:
 
 \[
 	u_{tt} = c\Delta u.
@@ -271,7 +271,7 @@ Hence,
 	f''(t) - f(t)^2 = \sum_{i=0}^mc_i\phi(t)'' - \sum_{i=0}^m\sum_{j=0}^mc_ic_j\phi_i(t)\phi_j(t).
 \]
 
-Notice the second term is a two dimensional, finite sum. We now need to find norm. As before we can write this as an inner prouct: $\langle f'' - f^2, f'' - f^2 \rangle$. The above expression is in the form $a_1\phi_1'' + \dots + a_m\phi_m'' +  b_{11}\phi_1\phi_1 + \dots b_{mm}\phi_m\phi_m$. This is a linear combination of a finite set of functions. So we can represent it as a quadratic form. The form above is a little awkward to work with. We would like to have it vary with one index only, or combine the $\phi_i'''$ and the $\phi_i\phi_j$ together. We would define a function $\pi(n)$ that returns the appropriate function either some $\phi_i$ or $\phi_i\phi_j$ depending on the value. Defining such a function is tricky however. One function is as follows
+Notice the second term is a two dimensional, finite sum. We now need to find norm. As before we can write this as an inner product: $\langle f'' - f^2, f'' - f^2 \rangle$. The above expression is in the form $a_1\phi_1'' + \dots + a_m\phi_m'' +  b_{11}\phi_1\phi_1 + \dots b_{mm}\phi_m\phi_m$. This is a linear combination of a finite set of functions. So we can represent it as a quadratic form. The form above is a little awkward to work with. We would like to have it vary with one index only, or combine the $\phi_i'''$ and the $\phi_i\phi_j$ together. We would define a function $\pi(n)$ that returns the appropriate function either some $\phi_i$ or $\phi_i\phi_j$ depending on the value. Defining such a function is tricky however. One function is as follows
 
 \[
 	\pi(k) = \begin{cases}
@@ -280,11 +280,11 @@ Notice the second term is a two dimensional, finite sum. We now need to find nor
 	\end{cases}
 \]
 
-Here $a|b$ is integer division, i.e $a|b = \operatorname{floor}(a/b)$.
+Here $a|b$ is integer division, i.e. $a|b = \operatorname{floor}(a/b)$.
 
 \smallskip
 
-If we define $\psi_k(t)$ to be $\pi_k(t)$ and define a similar function $\sigma(i)$ for the coeffients we can define $f'' - f^2$ we get:
+If we define $\psi_k(t)$ to be $\pi_k(t)$ and define a similar function $\sigma(i)$ for the coefficients we can define $f'' - f^2$ we get:
 
 \[
 	f'' - f^2 = \sum \sigma(i)\psi_i
