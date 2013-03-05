@@ -323,10 +323,61 @@ The approach generalises quite well to systems of differential equations. In con
 			&= c_{i1}\phi_i(t) + \dots + c_{im}{\phi_m(t)}.
 \end{align*}
 
+\subsection*{Least Squares Penalty}
+
 We will also need an inner product of some sort to define the least squares and roughness penalties. It seems reasonable to use the standard dot product $\mathbf{x} \cdot \mathbf{x}$ in place of $|x|^2$ for our penalties. For a two dimensional series $\mathbf{x} = (x,y)$ with coefficient vectors $\mathbf{b}$ and $\mathbf{c}$  Our least squares penalty has the form
 
-\begin{align}
+\begin{align*}
 	SSE &= \sum_{i=1}^n\{ [x_i - \sum_{j=1}^mb_j\phi_j(t_i)]^2 + [y_i - \sum_{j=1}^mc_j\phi_j(t_i)]^2 \} \\
-	    &= (\mathbf{x} - \mathbf{\Phi}\mathbf{b})'(\mathbf{x} - \mathbf{\Phi}\mathbf{b}) + (\mathbf{y} - \mathbf{\Phi}\mathbf{c})'(\mathbf{y} - \mathbf{\Phi}\mathbf{c})
-\end{align}
+	    &= (\mathbf{x} - \mathbf{\Phi}\mathbf{b})'(\mathbf{x} - \mathbf{\Phi}\mathbf{b}) + (\mathbf{y} - \mathbf{\Phi}\mathbf{c})'(\mathbf{y} - \mathbf{\Phi}\mathbf{c})\\
+	    &= \|\mathbf{[x \: y] - \Phi[b \: c]}\|_F^2.
+\end{align*}
+
+$\|\cdot\|^2_F$ is the Frobenius Norm. For an $n \times m$ matrix it is defined in terms of the sums of the squares of its elements
+
+\[
+	\|A\|_F^2 = \sum_{i = 1}^n\sum_{j=1}^m A_{ij}^2.
+\]
+
+\subsection*{Differential Equation Penalty}
+
+A system of differential equations has the form
+
+\begin{align*}
+	\mathbf{x}' &= f(\mathbf{x}, t) \\
+	 \mathbf{x}(t_0) &= \mathbf{x_0}  
+\end{align*}
+
+We won't be to worried about making sure our penalties are in the standard form above though. For it sometimes convenient to leave a higher order derivative on the left hand side instead of converting them to the standard form.
+
+\smallskip
+
+As usual we will be dealing with expressions of the form $\|T\mathbf{x}\|,$ except $\mathbf{x}(t)$ is a vector valued function, or a curve. We will use the following $L^2$ inner product to induce our norm
+
+\[
+	\langle \mathbf{x}, \mathbf{y} \rangle = \int_D \mathbf{x}(t) \cdot \mathbf{y}(t) \mathrm{d}t.
+\]
+
+Thanks to the relative abstractness of an inner product space, we will not have to make too many changes in moving into multivariate data.
+
+\smallskip
+
+\begin{example} Roughness Penalties \end{example}
+
+Suppose we have a penalty of the form $\|\mathbf{x}''\|$. If we expand out the inner product we see $\|\mathbf{x}''\|^2 = \sum \mathbf\|{x}_k''\|^2:w
+.$ Since we assume each component of $\mathbf{x}$ has its own basis function expansion, we can use the previous results on roughness penalties to find
+\[
+	\|\mathbf{x}\|^2 = \sum \mathbf{c}_i' \mathbf{K} \mathbf{c}_i.
+\]
+
+Here as usual, $\mathbf{K}_{ij} = \langle \phi_i, \phi_j \rangle$ where we use the one-dimensional inner product $\langle f, g \rangle = \int_D fg \mathrm{d}t.$
+
+\smallskip
+
+Notice that our penalty decomposes into a sum of simpler penalties. This suggests we could take a multiple penalty approach. Instead of an expression of the form $\lambda\|\mathbf{x}\|^2$ we have a sum of penalties
+
+\[
+	\sum \lambda_k \|\mathbf{x}_k\|^2  =  \lambda_1 \mathbf{c}_1' \mathbf{K} \mathbf{c}_1 + \dots + \lambda_m \mathbf{c}_m' \mathbf{K} \mathbf{c}_m
+\]
+
 \end{document}
