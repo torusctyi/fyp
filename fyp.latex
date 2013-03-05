@@ -32,10 +32,10 @@ $\mathbb{E}[y|t]$ is the conditional expectation of our independent variable $y$
 
 \begin{example}Simple Linear Regression \end{example}
 
-Basis Function Methods might seem a little abstract, but they are ubiquitous. For example, Simple Linear Regression is an example of a basis function method. Take two basis functions $\{1, t\}$, so that $\hat{y}(t)$, our estimate of $y$ given the value $t$, can be written as a linear combination of the two:
+Basis Function Methods might seem a little abstract, but they are ubiquitous. For example, Simple Linear Regression is an example of a basis function method. Take two basis functions $\{1, t\}$, so that $\hat{y}(t)$, our estimate of $y$ given the value $t$, can be written as a linear combination of the two
 
 \[
-	\widehat{\mathbb{E}[y|t]} = \hat{y}(t) = c_0 + c_1t
+	\widehat{\mathbb{E}[y|t]} = \hat{y}(t) = c_0 + c_1t.
 \]
 
 This is the form of a simple linear regression model. If our basis consists of just the single constant function $\phi(t) = 1$ then we get a model of the form
@@ -109,7 +109,7 @@ Least Squares is one of the most well known statistical estimation techniques. I
 	\widehat{y(t)} = \underset{f \in \mathit{S}}{\operatorname{argmin}}\sum_{i = 1}^n [y_i - f(t_i)]^2.
 \]
 
-We assume $\mathit{S}$ is the span of some set of $m$ basis functions i.e. $\mathit{S} = \{\sum_{i = 1}^mc_i\phi_i(t)| c_i \in \mathbb{R}\}$. This suggests that to find $\hat{y}$ we only need to estimate to coefficients $\hat{c}_i$. Then  we have completely determined $\hat{y}$. We can then write the least squares criterion as:
+We assume $\mathit{S}$ is the span of some set of $m$ basis functions i.e. $\mathit{S} = \{\sum\limits_{i = 1}^mc_i\phi_i(t)| c_i \in \mathbb{R}\}$. This suggests that to find $\hat{y}$ we only need to estimate to coefficients $\hat{c}_i$. Then  we have completely determined $\hat{y}$. We can then write the least squares criterion as:
 
 \[
 	(\hat{c}_1, \dots, \hat{c}_m)  = \underset{c_1 \dots c_K}{\operatorname{argmin}} \sum_{i=1}^n[y_i - \sum_{j=1}^m c_j\phi_j(t_i)]^2
@@ -138,9 +138,9 @@ Here $\mathit{D}$ is our domain of interest and $f''$ stands for the second deri
 This penalty can also be represented as a polynomial. Let $\langle f,g \rangle = \int_\mathit{D}f(t)g(t)\mathrm{d}t.$ We can see that $\langle \cdot, \cdot \rangle$ defines an inner product on $L^2(\mathit{D})$, the set of square integrable functions on $\mathit{D}.$ The penalty can be written in the form $PEN(f) = \langle f'', f''\rangle$. Substituting in the expansion for $f$ we get
 
 \begin{align*}
-	\langle f'', f'' \rangle &= \langle \sum_{i=1}^mc_i\phi_i'', \sum_{i=1}^mc_i\phi_i'' \rangle
-					     &= \sum_{i=1}^m\sum_{j=1}^m\langle c_i\phi_i'', c_j\phi_j'' \rangle
-			                     &= \sum_{i=1}^m\sum_{j=1}^mc_ic_j\langle \phi_i'', \phi_j'' \rangle.
+	\langle f'', f'' \rangle &= \langle \sum_{i=1}^mc_i\phi_i'', \sum_{i=1}^mc_i\phi_i'' \rangle \\	
+				 &= \sum_{i=1}^m\sum_{j=1}^m\langle c_i\phi_i'', c_j\phi_j'' \rangle \\ 
+				 &= \sum_{i=1}^m\sum_{j=1}^mc_ic_j\langle \phi_i'', \phi_j'' \rangle.
 \end{align*}
 
 We can see that the terms $\langle \phi_i'', \phi_j'' \rangle$ depend only on our choice of basis and so are ``fixed''
@@ -185,8 +185,6 @@ Notice that even though we are working in more than one dimension, our sum is st
 \smallskip
 
 Finding a least squares estimate is identical, so we will not cover it here.
-
-\newpage
 
 \begin{example}Fitting the Displacement of a Membrane Using a Laplacian Penalty\end{example}
 
@@ -284,35 +282,51 @@ Here $a|b$ is integer division, i.e. $a|b = \operatorname{floor}(a/b)$.
 
 \smallskip
 
-If we define $\psi_k(t)$ to be $\pi_k(t)$ and define a similar function $\sigma(i)$ for the coefficients we can define $f'' - f^2$ we get:
+If we define $\psi_k(t)$ to be $\pi_k(t)$ and define a similar function $\sigma(i)$ for the coefficients we can define $f'' - f^2$ we get
 
 \[
-	f'' - f^2 = \sum \sigma(i)\psi_i
+	f'' - f^2 = \sum \sigma(i)\psi_i.
 \]
 
-We now can express the penalty as a quadratic form:
+We now can express the penalty as a quadratic form
 
 \[
-	\int_\mathit{D}(f(t)'' - f(t)^2)^2 dt =  \mathbf{\sigma(c)}'\mathbf{K}\mathbf{\sigma(c})
+	\int_\mathit{D}(f(t)'' - f(t)^2)^2 dt =  \mathbf{\sigma(c)}'\mathbf{K}\mathbf{\sigma(c}).
 \]
 
 Here $\mathbf{K}_{ij} = \langle \psi_i, \psi_j \rangle$ and $\mathbf{\sigma(c)} = (\sigma(1), \dots, \sigma(m + m^2)) = (c_1, \dots, c_m, c_1c_1, \dots, c_m c_m)$. The inner product is $\langle f, g \rangle = \int_\mathit{D} f(t)g(t)dt$. Since $\mathbf{\sigma(c)}$ is a second order polynomial in the $c_i$, the penalty is actually as fourth order polynomial in the $c_i$.
 
 \smallskip
 
-We can write the Penalised Sum of Squared Errors in terms of the $c_i$:
+We can write the Penalised Sum of Squared Errors in terms of the $c_i$
 
 \[
-	PENSSE(\mathbf{c}) = \mathbf{(y - \Phi c)}'\mathbf{(y - \Phi c)} + \lambda \mathbf{\sigma(c)'K\sigma(c)}
+	PENSSE(\mathbf{c}) = \mathbf{(y - \Phi c)}'\mathbf{(y - \Phi c)} + \lambda \mathbf{\sigma(c)'K\sigma(c)}.
 \]
 
 \begin{remark}Alternative Representation Of The Penalty\end{remark}
 
-It is difficult to deal with the indexing above. An alternative is to break the function into two parts $f = f' + f^2$ where $f' = \sum c_k \phi_k'$ and $f^2 = \sum c_{k}c_{l}\phi_{k}\phi_{l}.$ Since $\langle f', f^2 \rangle = \langle f^2, f'$. We can represent the penalty in the form of the sum of three parts
+It is difficult to deal with the indexing above. An alternative is to break the function into two parts $f = f' + f^2$ where $f' = \sum c_k \phi_k'$ and $f^2 = \sum c_{k}c_{l}\phi_{k}\phi_{l}.$ Since $\langle f', f^2 \rangle = \langle f^2, f'$. We can represent the penalty in the form of the sum of three parts, letting $\mathbf{b} = (c_1c_1, c_1c_2, \dots)$
 
 \[
 	\langle f' + f^2, f' + f^2 \rangle = \mathbf{c'Kc} + 2\mathbf{c'Lb} + \mathbf{b'Mb}.
 \]
 
 Here $\mathbf{K}_{ij} = \langle \phi_i', \phi_j' \rangle.$ $\mathbf{L}$ and $\mathbf{M}$ similarly represent $\langle f', f^2 \rangle$ and $\langle f^2, f^2 \rangle$. 
+
+\section{Systems Of Ordinary Differential Equations (ODES)}
+
+The approach generalises quite well to systems of differential equations. In contrast to the multivariate case above, where one output variable depended on multiple input variables, we now have a time series of vectors $\mathbf{x}_k$ depending only on time. We give each component of $\mathbf{x}(t)$ its own basis expansion, but keep the same basis functions. For this section we will concentrate on the two dimensional case, except where it is obvious that we are considering an arbitrary number of dimensions.
+
+\begin{align*}
+	\mathbf{x}_i(t) &= \mathbf{c}_i'\mathbf{\phi}(t) \\
+			&= c_{i1}\phi_i(t) + \dots + c_{im}{\phi_m(t)}.
+\end{align*}
+
+We will also need an inner product of some sort to define the least squares and roughness penalties. It seems reasonable to use the standard dot product $\mathbf{x} \cdot \mathbf{x}$ in place of $|x|^2$ for our penalties. For a two dimensional series $\mathbf{x} = (x,y)$ with coefficient vectors $\mathbf{b}$ and $\mathbf{c}$  Our least squares penalty has the form
+
+\begin{align}
+	SSE &= \sum_{i=1}^n\{ [x_i - \sum_{j=1}^mb_j\phi_j(t_i)]^2 + [y_i - \sum_{j=1}^mc_j\phi_j(t_i)]^2 \} \\
+	    &= (\mathbf{x} - \mathbf{\Phi}\mathbf{b})'(\mathbf{x} - \mathbf{\Phi}\mathbf{b}) + (\mathbf{y} - \mathbf{\Phi}\mathbf{c})'(\mathbf{y} - \mathbf{\Phi}\mathbf{c})
+\end{align}
 \end{document}
