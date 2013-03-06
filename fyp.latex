@@ -380,4 +380,57 @@ Notice that our penalty decomposes into a sum of simpler penalties. This suggest
 	\sum \lambda_k \|\mathbf{x}_k\|^2  =  \lambda_1 \mathbf{c}_1' \mathbf{K} \mathbf{c}_1 + \dots + \lambda_m \mathbf{c}_m' \mathbf{K} \mathbf{c}_m
 \]
 
+\begin{example} Generalised Roughness Penalties \end{example}
+
+In all the previous cases the weights $\lambda$ have been \emph{external} to the norms we used. What if we instead used a weighted inner product of the form $\langle x, y \rangle_Q = \mathbf{x'Qy}.$ To define an inner product we must have that $\mathbf{Q}$ be symmetric and positive definite. However since we only have $\lambda \geq 0$ in general, we will only say that $\mathbf{Q}$ must be positive semidefinite and symmetric. We define a bilinear form, but still retain the inner product notation, $\langle \mathbf{x}, \mathbf{y} \rangle = \int_D \mathbf{x'Qy}\mathrm{d}t$
+
+\smallskip
+
+What will the roughness penalty look like with this change? If $\mathbf{Q}$ is diagonal then we will get the results above with multiple $\lambda$'s.
+
+\smallskip
+
+In the case of a general suitable matrix, by making use of the usual approach  we find
+
+\begin{align*}
+	\|\mathbf{x}''\|_Q^2 &= \sum \sum q_{ij} \langle \mathbf{x}_i'' , \mathbf{x}_j'' \rangle_{L^2} \\
+			   &= \sum \sum q_{ij} \mathbf{c}_i' \mathbf{K} \mathbf{c}_j.
+\end{align*}
+
+
+\begin{example} Lotka Volterra Equations \end{example}
+
+The Lotka Volterra Equations are a model of the interactions of a prey and predator population. They are as follows
+
+\begin{align*}
+	x' &= x(\alpha - \beta y) \\ 
+	   &= \alpha x - \beta xy \\
+	y' &= -y(\gamma - \delta x) \\ 
+	   &= -\gamma y - \delta xy.  
+\end{align*}
+
+We will be using the standard dot product for our norms. This means that each equation can have its own penalty, so without loss of generality we will find a formula for 
+
+\[
+	\|x' - \alpha x - \beta xy\|^2
+\]
+
+Here we are computing a ``one dimensional'' penalty. Notice we no longer assume anything about the signs of the coefficients.
+
+By the usual methods we see
+
+\begin{align*}
+	\|x' - \alpha x - \beta xy\|^2 &= \langle x' - \alpha x - \beta xy, x' - \alpha x - \beta xy \rangle \\
+				      &= \|x'\|^2 + \alpha^2 \|x\|^2 + \beta^2 \|xy\|^2 + 2\alpha\beta\langle xy, x\rangle + 2\alpha \langle x', x\rangle + 2\beta \langle x', xy \rangle.
+\end{align*}
+
+Many of the terms were covered in previous examples, so we will only examine the nonlinear interaction terms. 
+
+Firstly $ xy = \sum \sum b_i \phi_i c_j \phi_j.$ If we define $d = (b_1c_1, \dots, b_nc_n)$ we get
+
+\[
+	\|xy\|^2 = \mathbf{d'K^{xy}d}.
+\]
+
+Where $\mathbf{K^{xy}}_{ikjl} = \langle \phi_i\phi_k, \phi_j\phi_l \rangle.$ We can devise similar results for all the other terms.
 \end{document}
