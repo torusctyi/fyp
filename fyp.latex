@@ -320,7 +320,7 @@ Here $\mathbf{K}_{ij} = \langle \phi_i', \phi_j' \rangle.$ $\mathbf{L}$ and $\ma
 
 \begin{definition}The $\operatorname{Vec}$ operator applied to a matrix stacks all the matrix's columns on top of each other \end{definition}
 
-We can represent the vector of products $c_ic_j$ as $\operatorname{Vec}\mathbf{cc'}$. We can write the penalty without messing with indices
+We can represent the vector of products $c_ic_j$ as $\operatorname{Vec}\mathbf{cc'}$. Note that each term $c_ic_j$ can appear twice if $i \neq j$. We must therefore scale any inner product matrices appropriately. We can write the penalty without messing with indices
 
 \[
 	\langle f' + f^2, f' + f^2 \rangle = \mathbf{c'Kc} +2\mathbf{c'L}\operatorname{Vec} (\mathbf{cc'}) + \operatorname{Vec}(\mathbf{cc'})'\mathbf{M}\operatorname{Vec}(\mathbf{cc'})
@@ -361,7 +361,7 @@ A system of differential equations has the form
 	 \mathbf{x}(t_0) &= \mathbf{x_0}  
 \end{align*}
 
-We won't be to worried about making sure our penalties are in the standard form above though. For it sometimes convenient to leave a higher order derivative on the left hand side instead of converting them to the standard form.
+We won't be to worried about making sure our penalties are in the standard form above though. It sometimes convenient to leave a higher order derivative on the left hand side instead of converting them to the standard form. 
 
 \smallskip
 
@@ -371,14 +371,17 @@ As usual we will be dealing with expressions of the form $\|T\mathbf{x}\|,$ exce
 	\langle \mathbf{x}, \mathbf{y} \rangle = \int_D \mathbf{x}(t) \cdot \mathbf{y}(t) \mathrm{d}t.
 \]
 
-Thanks to the relative abstractness of an inner product space, we will not have to make too many changes in moving into multivariate data.
+Thanks to the relative abstractness of an inner product space, we will not have to make too many changes in moving into multivariate data. 
+
+\smallskip
+
+It is easier if each component is build on the same basis where Each component $x_i$ has its own coefficient vector $\mathbf{c}_i$ so that $\mathbf{x}(t) = \mathbf{C\phi}(t)$ where $\mathbf{C}_{ij} = (\mathbf{c}_i)_j.$
 
 \smallskip
 
 \begin{example} Roughness Penalties \end{example}
 
-Suppose we have a penalty of the form $\|\mathbf{x}''\|$. If we expand out the inner product we see $\|\mathbf{x}''\|^2 = \sum \mathbf\|{x}_k''\|^2:w
-.$ Since we assume each component of $\mathbf{x}$ has its own basis function expansion, we can use the previous results on roughness penalties to find
+Suppose we have a penalty of the form $\|\mathbf{x}''\|$. If we expand out the inner product we see $\|\mathbf{x}''\|^2 = \sum \int_\mathit{D} x_k(t)^2\mathrm{d}t.$ Since we assume each component of $\mathbf{x}$ has its own basis function expansion, we can use the previous results on roughness penalties to find
 \[
 	\|\mathbf{x}\|^2 = \sum \mathbf{c}_i' \mathbf{K} \mathbf{c}_i.
 \]
@@ -395,11 +398,11 @@ Notice that our penalty decomposes into a sum of simpler penalties. This suggest
 
 \begin{example} Generalised Roughness Penalties \end{example}
 
-In all the previous cases the weights $\lambda$ have been \emph{external} to the norms we used. What if we instead used a weighted inner product of the form $\langle x, y \rangle_Q = \mathbf{x'Qy}.$ To define an inner product we must have that $\mathbf{Q}$ be symmetric and positive definite. However since we only have $\lambda \geq 0$ in general, we will only say that $\mathbf{Q}$ must be positive semidefinite and symmetric. We define a bilinear form, but still retain the inner product notation, $\langle \mathbf{x}, \mathbf{y} \rangle = \int_D \mathbf{x'Qy}\mathrm{d}t$
+In all the previous cases the weights $\lambda$ have been \emph{external} to the norms we used. What if we instead used a weighted inner product of the form $\langle x, y \rangle_Q = \mathbf{x'Qy}?$ To define an inner product we must have that $\mathbf{Q}$ be symmetric and positive definite. However since we only have $\lambda \geq 0$ in general, we will only say that $\mathbf{Q}$ must be positive semidefinite and symmetric. We define a symmetric, positive semidefinite bilinear form, but still retain the inner product notation, $\langle \mathbf{x}, \mathbf{y} \rangle = \int_D \mathbf{x'Qy}\mathrm{d}t.$
 
 \smallskip
 
-What will the roughness penalty look like with this change? If $\mathbf{Q}$ is diagonal then we will get the results above with multiple $\lambda$'s.
+What will the roughness penalty look like with this change? If $\mathbf{Q}$ is diagonal then we will get the results above with the multiple $\lambda$'s.
 
 \smallskip
 
@@ -422,10 +425,10 @@ The Lotka Volterra Equations are a model of the interactions of a prey and preda
 	   &= -\gamma y - \delta xy.  
 \end{align*}
 
-We will be using the standard dot product for our norms. This means that each equation can have its own penalty, so without loss of generality we will find a formula for 
+We will be using the standard dot product for our norms. In the standard inner product, the different terms are independent of each other; we only need to look at one equation , so without loss of generality we will find a formula for 
 
 \[
-	\|x' - \alpha x - \beta xy\|^2
+	\|x' - \alpha x - \beta xy\|^2.
 \]
 
 Here we are computing a ``one dimensional'' penalty. Notice we no longer assume anything about the signs of the coefficients.
@@ -439,7 +442,7 @@ By the usual methods we see
 				      &= \|x'\|^2 + \alpha^2 \|x\|^2 + \beta^2 \|xy\|^2 + 2\alpha\beta\langle xy, x\rangle - 2\alpha \langle x', x\rangle - 2\beta \langle x', xy \rangle.
 \end{align*}
 
-Many of the terms were covered in previous examples, so we will only examine the nonlinear interaction terms. 
+Many of the terms were covered in previous examples, so only examine the nonlinear interaction terms bear any serious examination. We will not bother defining the matrices that appear, as their definitions should be clear by now. 
 
 \smallskip
 
@@ -449,9 +452,13 @@ Firstly $ xy = \sum \sum b_i \phi_i c_j \phi_j.$ If we define $d = (b_1c_1, \dot
 	\|xy\|^2 = \mathbf{d'Kd}.
 \]
 
-Where $\mathbf{K}_{ikjl} = \langle \phi_i\phi_k, \phi_j\phi_l \rangle.$ We can devise similar results for all the other terms. We will use the $\operatorname{Vec}$ operator again to save space. Let $\mathbf{d} = \operatorname{Vec}(\mathbf{cb'})$ as before. We can express the penalty analytically
+Where $\mathbf{K}_{ikjl} = \langle \phi_i\phi_k, \phi_j\phi_l \rangle.$ We can devise similar results for all the other terms. 
+
+\smallskip
+
+We will use the $\operatorname{Vec}$ operator again to save space. Let $\mathbf{d} = \operatorname{Vec}(\mathbf{cb'})$ as before. We can express the penalty analytically
 
 \[
-	\|x' - \alpha x - \beta xy\|^2 = \mathbf{b'Kb} + \alpha^2 \mathbf{b'Lb} + \beta^2 \mathbf{d'M'd} + 2\alpha\beta \mathbf{d'Nb} - 2\alpha\mathbf{b'Ob} - 2\beta\mathbf{b'Pd}
+	\|x' - \alpha x - \beta xy\|^2 = \mathbf{b'Kb} + \alpha^2 \mathbf{b'Lb} + \beta^2 \mathbf{d'M'd} + 2\alpha\beta \mathbf{d'Nb} - 2\alpha\mathbf{b'Ob} - 2\beta\mathbf{b'Pd}.
 \]
 \end{document}
