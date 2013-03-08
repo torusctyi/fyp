@@ -8,6 +8,7 @@
 
 \theoremstyle{definition}
 \newtheorem{example}{Example}
+\newtheorem*{definition}{Definition}
 
 \theoremstyle{remark}
 \newtheorem*{remark}{Remark}
@@ -304,7 +305,7 @@ We can write the Penalised Sum of Squared Errors in terms of the $c_i$
 	PENSSE(\mathbf{c}) = \mathbf{(y - \Phi c)}'\mathbf{(y - \Phi c)} + \lambda \mathbf{\sigma(c)'K\sigma(c)}.
 \]
 
-\begin{remark}Alternative Representation Of The Penalty\end{remark}
+\subsection*{Alternative Representation Of The Penalty By Splitting the Inner Product}
 
 It is difficult to deal with the indexing above. An alternative is to break the function into two parts $f = f' + f^2$ where $f' = \sum c_k \phi_k'$ and $f^2 = \sum c_{k}c_{l}\phi_{k}\phi_{l}.$ Since $\langle f', f^2 \rangle = \langle f^2, f'$. We can represent the penalty in the form of the sum of three parts, letting $\mathbf{b} = (c_1c_1, c_1c_2, \dots)$
 
@@ -313,6 +314,18 @@ It is difficult to deal with the indexing above. An alternative is to break the 
 \]
 
 Here $\mathbf{K}_{ij} = \langle \phi_i', \phi_j' \rangle.$ $\mathbf{L}$ and $\mathbf{M}$ similarly represent $\langle f', f^2 \rangle$ and $\langle f^2, f^2 \rangle$. 
+
+
+\subsection*{Using the $\operatorname{Vec}$ Operator to Represent the Penalty}
+
+\begin{definition}The $\operatorname{Vec}$ operator applied to a matrix stacks all the matrix's columns on top of each other \end{definition}
+
+We can represent the vector of products $c_ic_j$ as $\operatorname{Vec}\mathbf{cc'}$. We can write the penalty without messing with indices
+
+\[
+	\langle f' + f^2, f' + f^2 \rangle = \mathbf{c'Kc} +2\mathbf{c'L}\operatorname{Vec} (\mathbf{cc'}) + \operatorname{Vec}(\mathbf{cc'})'\mathbf{M}\operatorname{Vec}(\mathbf{cc'})
+\]
+
 
 \section{Systems Of Ordinary Differential Equations (ODES)}
 
@@ -417,20 +430,28 @@ We will be using the standard dot product for our norms. This means that each eq
 
 Here we are computing a ``one dimensional'' penalty. Notice we no longer assume anything about the signs of the coefficients.
 
+\smallskip
+
 By the usual methods we see
 
 \begin{align*}
 	\|x' - \alpha x - \beta xy\|^2 &= \langle x' - \alpha x - \beta xy, x' - \alpha x - \beta xy \rangle \\
-				      &= \|x'\|^2 + \alpha^2 \|x\|^2 + \beta^2 \|xy\|^2 + 2\alpha\beta\langle xy, x\rangle + 2\alpha \langle x', x\rangle + 2\beta \langle x', xy \rangle.
+				      &= \|x'\|^2 + \alpha^2 \|x\|^2 + \beta^2 \|xy\|^2 + 2\alpha\beta\langle xy, x\rangle - 2\alpha \langle x', x\rangle - 2\beta \langle x', xy \rangle.
 \end{align*}
 
 Many of the terms were covered in previous examples, so we will only examine the nonlinear interaction terms. 
 
+\smallskip
+
 Firstly $ xy = \sum \sum b_i \phi_i c_j \phi_j.$ If we define $d = (b_1c_1, \dots, b_nc_n)$ we get
 
 \[
-	\|xy\|^2 = \mathbf{d'K^{xy}d}.
+	\|xy\|^2 = \mathbf{d'Kd}.
 \]
 
-Where $\mathbf{K^{xy}}_{ikjl} = \langle \phi_i\phi_k, \phi_j\phi_l \rangle.$ We can devise similar results for all the other terms.
+Where $\mathbf{K}_{ikjl} = \langle \phi_i\phi_k, \phi_j\phi_l \rangle.$ We can devise similar results for all the other terms. We will use the $\operatorname{Vec}$ operator again to save space. Let $\mathbf{d} = \operatorname{Vec}(\mathbf{cb'})$ as before. We can express the penalty analytically
+
+\[
+	\|x' - \alpha x - \beta xy\|^2 = \mathbf{b'Kb} + \alpha^2 \mathbf{b'Lb} + \beta^2 \mathbf{d'M'd} + 2\alpha\beta \mathbf{d'Nb} - 2\alpha\mathbf{b'Ob} - 2\beta\mathbf{b'Pd}
+\]
 \end{document}
