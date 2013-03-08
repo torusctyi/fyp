@@ -375,10 +375,6 @@ Thanks to the relative abstractness of an inner product space, we will not have 
 
 \smallskip
 
-It is easier if each component is build on the same basis where Each component $x_i$ has its own coefficient vector $\mathbf{c}_i$ so that $\mathbf{x}(t) = \mathbf{C\phi}(t)$ where $\mathbf{C}_{ij} = (\mathbf{c}_i)_j.$
-
-\smallskip
-
 \begin{example} Roughness Penalties \end{example}
 
 Suppose we have a penalty of the form $\|\mathbf{x}''\|$. If we expand out the inner product we see $\|\mathbf{x}''\|^2 = \sum \int_\mathit{D} x_k(t)^2\mathrm{d}t.$ Since we assume each component of $\mathbf{x}$ has its own basis function expansion, we can use the previous results on roughness penalties to find
