@@ -66,11 +66,11 @@ In this case we would generally use the mean of the $y$ values as our estimate o
 
 \smallskip
 
-This basis would work very well for representing data which starts to increase linearly past a certain threshold.  Broken stick functions and constant functions are very cheap computationally, only needing literally a line or two of code to implement and only have at most one associated parameter $(\tau)$, consuming little memory.  A computer can produce and work with comparatively a very large number of them at once. This could be used to cover situations where there data is unchanging over relatively long periods.
+This basis would work very well for representing data which starts to increase linearly past a certain threshold. Ramp functions and constant functions are very cheap computationally, only need line or two of code to implement and only have one associated parameter $\tau$.  A computer can produce comparatively a very large number of them at once. This could be used to cover situations where there data is unchanging over relatively long periods.
 
 \smallskip
 
-Ramp functions are the building blocks for the ``p-splines'' developed by Eiler and Marx. P-splines are a precursor to the penalty based approach used here. P-splines penalise the coefficients, whereas we will penalise the generated curve.
+Ramp functions are the building blocks for the ``p-splines'' developed by Eiler and Marx. P-splines are a precursor to the penalty based approach use here. P-splines penalise the coefficients, whereas we will penalise the genearted curve.
 
 \smallskip
 
@@ -82,7 +82,7 @@ The above basis has two disadvantages though. Firstly the second basis function 
 This underscores an important point. There are many types of basis besides the ones usually encountered, such as polynomial bases. Many of them are fungible from the pure mathematical point of view in terms of how well they can fit a function. The statistician should make a sensible choice of basis. If our choice of basis is good, then it will be able to fit the data with only a few terms, and we might be able to avoid estimating many coefficients. This is one of the reasons why simple linear regression and quadratic regression are useful; they can capture much variation in the observed data in spite of being very simple.
 
 \begin{example}(Fourier Basis Functions)
-If our data has a periodic component to it, such as the observed temperature over the course of the year, or a time series of annual sales, then it seems intuitively correct to use a basis consisting of periodic functions. This suggests that we should use a Fourier basis consisting of the set of functions $\{\cos(n\omega t), \sin(n\omega t)\}$ where $0 \leq n \leq N$ for some $N$ and $\omega$ is the frequency. The frequency depends on our time scale, they are related by the formula $\omega = 2\pi/T$, where $T$ is the period. 
+If our data has a periodic component to it, such as the observed temperature over the course of the year, or a time series of annual sales, then it seems intuitively correc to use a basis consisting of periodic functions. This suggests that we should use a Fourier basis consisting of the set of functions $\{\cos(n\omega t), \sin(n\omega t)\}$ where $0 \leq n \leq N$ for some $N$ and $\omega$ is the frequency. The frequency depends on our time scale, they are related by the formula $\omega = \frac{2\pi}{T}$, where $T$ is the period. 
 
 \smallskip
 
@@ -93,9 +93,10 @@ Furthermore Fourier basis functions have several other desirable properties. The
 A Fourier basis can represent  any square integrable function on some interval. This covers a large proportion of the functions encountered in real life  They cannot detect how frequencies change in space however, only their global behaviour. They can also be somewhat mundane - almost certain to work, but unlikely to provide anything too interesting.
 
 \smallskip
-\qedsymbol
-\end{example}
-\begin{example}(B-spline Basis Functions) Roughly speaking, B-splines are compactly supported polynomial functions, or more practically they are nonzero only inside of a given interval. More formally a B-Spline basis consists of a degree $n$, which determines the degree of the basis functions, and a set of knots, that is a set of $K$ time points $\{t_0, \dots, t_K\}$. 
+
+\begin{example}B-spline Basis Functions\end{example}
+
+Roughly speaking, B-splines are compactly supported polynomial functions, or more practically they are nonzero only inside of a given interval. More formally a B-Spline basis consists of a degree $n$, which determines the degree of the basis functions, and a set of knots, that is a set of $K$ time points $\{t_0, \dots, t_K\}$. 
 
 \smallskip
 
@@ -128,9 +129,8 @@ The above expression is can be expressed more cleanly using vector notation. Fir
 	\hat{\mathbf{c}} = \underset{\mathbf{c} \in \mathbb{R}^m}{\operatorname{argmin}} (\mathbf{y - \Phi c})'(\mathbf{y - \Phi c}).
 \]
 
-The expression on the right hand side is an example of a quadratic form, they are the generalisation of quadratic functions to finite dimensional vector spaces. We can have quadratic forms on infinite dimensional vectors spaces too, but that is not relevant here.
+The expression on the right hand side is an example of a quadratic form,  they are the generalisation of quadratic functions to finite dimensional vector spaces. We can have quadratic forms on infinite dimensional vectors spaces too, but that is not relevant here.
 
-The advantage of quadratic forms is that they are very easy to minimise as any textbook on regression or numerical optimisation will tell you.
 \section{Roughness Penalties}
 
 It is well known that the least squares gives us the BLUE of $\mathbf{y},$ the function we assume to be generating the data. Nonetheless it is often useful to employ a form of regularisation which constrains how much $\hat{y}$ is allowed to vary. Intuitively, this reduces the variation of $\hat{y}$ and helps guard against overfitting. In the context of basis function expansions, the most commonly used penalty is the curvature penalty
@@ -165,48 +165,27 @@ Note that this relies on the fact that the second derivative operator maps a lin
 
 \section{Penalised Least Squares}
 
-There are two distinct, but competing objectives. We want a fit $\hat{y}$ that maintains fidelity to the data, as represented by the goodness of fit, but simultaneously adheres to the requirement of a smooth description of the data. 
-
-\smallskip
-
-The solution is to use a penalty that incorporates both of these objectives, the penalised sum of squared errors. The penalised sum of squared errors is a functional, or a function whose domain is a set of functions and whose codomain is the real numbers. Here it is a functional on the spanning set of our basis functions $\{\phi_i(t)\}.$ It is the weighted sum of the roughness and least squares penalties
+We have two distinct, but competing objectives. We want a fit $\hat{y}$ that maintains fidelity to the data, as represented by the goodness of fit, but simultaneously adheres to the requirement of a smooth description of the data. The solution is to use a combination of the two penalties, the penalised sum of squared errors
 
 \[
-	\mathrm{PENSSE}(f) = \sum_{i = 0}^n (y_i - f(t_i)^2 + \lambda \int_\mathit{D} [f''(t)]^2\mathrm{d}t.
+	PENSSE(f) = \sum_{i = 0}^n (y_i - f(t_i)^2 + \lambda \int_\mathit{D} [f(t)'']^2\mathrm{d}t.
 \]
 
-The parameter $\lambda$ controls the tradeoff between error and smoothness as represented by the least squares and roughness terms respectively. It can be thought of as a model complexity parameter; as $\lambda$ increases $\hat{y}(t)$ becomes more linear and so our model tends more towards simple linear regression, as it decreases the model tends more towards fitting the data exactly. 
+The parameter $\lambda$ controls the tradeoff between error and smoothness as represented by the least squares and roughness terms respectively. It can be thought of as a model complexity parameter; as $\lambda$ increases $\hat{y}(t)$ becomes more linear and so our model tends more towards simple linear regression. In polynomial regression the analogous parameter would be the order of the polynomial we are fitting. The order of a polynomial is a discrete quantity, whilst $\lambda$ is a continuous one. 
 
 \smallskip
 
-In polynomial regression the analogous parameter would be the order of the polynomial we are fitting. However the two quantities differ in that the order of a polynomial is a discrete quantity, whilst $\lambda$ is a continuous one. 
+\par\noindent We can also think of $\lambda$ as measuring the degree of fidelity of the fitted curve to the ODE $\hat{y}''(t) =$.
 
 \smallskip
-
-\par\noindent We can also think of $\lambda$ as controlling the degree of fidelity of the fitted curve to the ODE $\hat{y}''(t) = 0$.
-
-\smallskip
-
-The choice of $\lambda$ is important; strictly speaking we ought to denote $\hat{y}(t)$ as $\hat{y}_{\lambda}(t)$ to denote the dependence. An estimate for $\lambda$ can generally be found by cross validation. As discussed in Green and Silverman sometimes there are better choices of $\lambda$ than a computer can find though.
-
-\smallskip
-
-Assume again that $\hat{y}(t)$ is the sum of basis functions, depending on a vector of coefficients $\mathbf{\hat{c}}$. This means we can omit the dependence on $\hat{y}(t)$ and convert from the problem of estimating a function to estimating a vector $\mathbf{\hat{c}(\lambda)}$ (or just simply $\mathbf{\hat{c}}$) which depends on our choice of smoothing parameter. Using the previous results we can show that the Penalised Sum of Squares can be written as the sum of two quadratic forms:
+If we assume again that $f$ is the sum of basis functions, depending on a vector of coefficients  $\mathbf{\hat{c}}$; we can use the previous results to show that the Penalised Sum of Squares can be written as the sum of two quadratic forms:
 
 \[
-	\mathrm{PENSSE}(c) = (\mathbf{y - \Phi c})'(\mathbf{y - \Phi c}) + \lambda \mathbf{c}'\mathbf{Kc}.
+	PENSSE(c) = (\mathbf{y - \Phi c})'(\mathbf{y - \Phi c}) + \lambda \mathbf{c}'\mathbf{Kc}.
 \]
 
-Where $\mathbf{y}$, $\mathbf{K}$ and $\mathbf{\Phi}$ have the same definitions as they did before. This is an regularised regression problem or Tikhonov regularisation. The problem of minimising this expression has the solution 
+Where $\mathbf{y}$, $\mathbf{K}$ and $\mathbf{\Phi}$ have the same definitions as they did before.
 
-\begin{align*}
-	\mathbf{\hat{c}(\lambda)} &= \mathbf{(\Phi'\Phi + \lambda K)^{-1}\Phi'y} \\ 
-			 &= \mathbf{H}(\lambda)\mathbf{y}
-\end{align*}
-
-If this problem is looked at from the perspective of linear models, as in Christessen, then $\mathbf{y} = \mathbf{\Phi c + e}$, where the elements of $\mathbf{e}$ are i.i.d and have mean zero and variance $\sigma^2$, then we can estimate the variance of $\hat{y}(t).$ We will denote the hat matrix $\mathbf{H}(\lambda)$ by $\mathbf{H}.$
-
-We have $\mathbf{\hat{c}} = \mathbf{H(\Phi c + e)},$ so $\mathbb{E}[\mathbf{\hat{c}}] = \mathbf{H\Phi c}.$ Note $\mathbf{\hat{c}}$ can be a biased estimate of $\mathbf{c}$. The variance of $\mathbf{\hat{c}}$ is given by $\mathrm{Var}[\mathbf{\hat{c}}] = \sigma^2\mathbf{H\Phi\Phi' H'}.$ Hence the expected value of $\mathbf{\hat{y}}$ is $\mathbf{\Phi H\Phi c}$ and its variance is $\sigma^2 \mathbf{\Phi H\Phi\Phi' H'\Phi'}$.
 \section{Multivariate Bases}
 
 What if our data is spatial in nature? In this case our data will often be at a series of points $\mathbf{x}_i = (x_i, y_i); i = 1, \dots ,n$. It is actually not too difficult to extend our results; it is almost as easy as replacing the $t_i$ with $\mathbf{x_i}$.
