@@ -1,15 +1,10 @@
-\documentclass[10pt, a4paper]{article}
+\documentclass[12pt, a4paper]{article}
 
 \usepackage{amsmath}
 \usepackage{amsfonts}
 \usepackage{vmargin}
 \usepackage{amsthm}
 \usepackage{graphicx}
-
-\theoremstyle{theorem}
-\newtheorem{theorem}{Theorem}
-\newtheorem{corollary}{Corollary}
-\newtheorem{lemma}{Lemma}
 
 \theoremstyle{definition}
 \newtheorem{example}{Example}
@@ -36,9 +31,15 @@ Fitting sophisticated mathematical functions to empirical data continues to be a
 
 \smallskip
 
-Here, $\mathbb{E}[y|t]$ is the conditional expectation of the dependent variable $y$, given our independent data $x$. The conditional expectation $\mathbb{E}[y|t]$ is the estimate of $y$ depending exclusively on $t$ that minimises the squared loss $\mathbb{E}[y(t) - E[y|t]]^2$. This is a theoretical optimiser, and so in practice we must make do with an estimate $\widehat{\mathbb{E}[y|t]}$ instead, using our basis functions $\{\phi_k\}$
+Here, $\mathbb{E}[y|t]$ is the conditional expectation of the dependent variable $y$, given our independent data $x$. The conditional expectation $\mathbb{E}[y|t]$ is the estimate of $y$ depending exclusively on $t$ that minimises the squared loss $\mathbb{E}[y(t) - E[y|t]]^2$. This is a theoretical optimiser, and so in practice we must make do with an estimate $\widehat{\mathbb{E}[y|t]}$ instead.
 
-\begin{example}(Simple Linear Regression) Simple linear regression is an example of a statistical procedure that uses a basis function representation. Take two basis functions $\{1, t\}$, so that $\hat{y}(t)$, our estimate of $y$ given the value $t$, can be written as a linear combination of the two $\widehat{\mathbb{E}[y|t]} = \hat{y}(t) = c_0 + c_1t.$ This is the form of a simple linear regression model. If our basis consists of just the single constant function $\phi(t) = 1$ then we get a model of the form $\hat{y} = c_0.$ In this case we would generally use the mean of the $y$ values as our estimate of $c_0$. If we go in the other direction and add a quadratic function $t^2$ we get a quadratic regression model $\hat{y}(t) = c_0 + c_1t + c_2t^2.$
+\begin{example}(Simple Linear Regression) Simple linear regression is an example of a statistical procedure that uses a basis function representation. Take two basis functions $\{1, t\}$, so that $\hat{y}(t)$, our estimate of $y$ given the value $t$, can be written as a linear combination of the two $\widehat{\mathbb{E}[y|t]} = \hat{y}(t) = c_0 + c_1t.$
+
+This is the form of a simple linear regression model. If our basis consists of just the single constant function $\phi(t) = 1$ then we get a model of the form $\hat{y} = c_0.$
+
+\smallskip
+
+In this case we would generally use the mean of the $y$ values as our estimate of $c_0$. If we go in the other direction and add a quadratic function $t^2$ we get a quadratic regression model $\hat{y}(t) = c_0 + c_1t + c_2t^2.$
 
 \qedsymbol
 \end{example}
@@ -100,7 +101,7 @@ A Fourier basis can represent  any square integrable function on some interval. 
 
 Since they are compact they generally can only individually capture local information about the data. One of the main advantages of B Splines is that they can represent any other spline of the same degree and smoothness with the same knots. This makes them useful for statistics since make fewer assumptions less about the form of the data, they can help us avoid bias.
 
-$\square$
+\qedsymbol
 \end{example}
 
 \section{Least Squares Fitting}
@@ -303,22 +304,16 @@ We define the matrix $\mathbf{\Phi}$ as before with $\mathbf{\Phi}_{ij} = \phi_j
 
 Here we discuss generalisations of the roughess penalty to penaltys on nonlinear operators applied to the function. The problem is finding nice expressions for penalies of the form $\int_D |Tf(t)|^2 \mathrm{d}t$, where $T$ is not necessarily a linear operator anymore. Continuing with the case where we are working on the span of a finite set of basis functions, so an arbitary function $f$ can be written as $f(t) = \mathbf{c'\phi}(t)$, it will be shown how in some cases that the penalty can be written in the form $\mathbf{F(c)'KF(c)}$ where $F(c)$ is a vector valued function of our parameter vector $\mathbf{c}.$ In all the cases we have seen so far $\mathbf{F(\cdot)}$ was simply the identity function $\mathbf{F(c)} = \mathbf{c}.$ In the nonlinear case things can get more interesting as expected.
 
-\smallskip
-
-The trick is that if our function is of the form $f = \sum c_i\phi_i$ then some nonlinear operators will return something of the form $\sum b_i(\mathbf{c}) \psi_i$ for some other functions $\{\psi_i\}$. The coefficients $b_i$ depend on the original coefficients $c_i,$ reflecting the fact the our function is uniquely defined by and represented by its coefficients.  Since the nonlinear operator $T$ has the property that it maps from one vector space to another, the span of the $\phi_i$ functions to the span of the $\psi_i$ functions. The nonlinearity is reflected in the fact the coefficients in front of the $\psi_i$ depend nonlinearly on the coefficients of the $\phi_i$ functions.
-
-\smallskip 
-
-Since the image (or range) of the span of the $\phi_i$ under $T$ is a vector subspace of the inner product space $\mathit{L}^2[D]$ it inherits the inner product of its parent. This is the property that we will use, it is easy to find an expression for the inner product on a finite vector space, it will always be something of the form $\mathbf{b'Ab}.$ Since the coefficients of the $\psi_i$ depend of the coefficients of the $\phi$ this can be written as $\mathbf{F(c)'AF(c)}.$ The matrix $A$ is generally easy to find, it is identical to the ideas we used before.
-
-\smallskip
-
-Finding the matrix $\mathbf{A}$ is easy it depends only on the $\psi_i$ and can be written in the form $\mathbf{A}_{ij} = \langle \psi_i, \psi_j \rangle$. The new basis $\{\psi_i\}$ is self evident in many cases. The hard part is finding the coefficients, or equivalently the function $\mathbf{F(c)}.$
-
 \begin{example}($f'' = f^2$) This example is purely artificial and intended to illustrate how the expresssion for the penalty term can be derived; it is a simple nonlinear ODE that is amenable to this technique. In this case our penalty is 
 \[
 	\int_\mathit{D} (f''(t) - f(t)^2)^2\mathrm{dt}.
 \]
+
+It now time to represent the penalty in the form above. The trick is that if our function is of the form $f = \sum c_i\phi_i$ then we will see that $Tf = f'' - f = \sum b_i\psi_i,$ for some other functions $\{\psi_i\}$. The coefficients $b_i$ depend on the original coefficients $c_i$, allowing the expression to be written as $Tf = \sum b_i(\mathbf{c})\psi_i.$ The nonlinear operator $T = f'' - f^2$ has the property that it maps from one vector space to another, the span of the $\phi_i$ functions to the span of the $\psi_i$ functions. The nonlinearity is reflected in the fact the coefficients in front of the $\psi_i$ depend nonlinearly on the coefficients of the $\phi_i$ functions.
+
+\smallskip 
+
+Since the image or range of the span of the $\phi_i$ under $T$ is itself a vector space and it is subset of the inner product space $\mathit{L}^2[D]$
 
 \[
 	f''(t) = \sum_{i=0}^mc_i\phi_i(t)''
@@ -334,7 +329,7 @@ Hence,
 	f''(t) - f(t)^2 = \sum_{i=0}^mc_i\phi(t)'' - \sum_{i=0}^m\sum_{j=0}^mc_ic_j\phi_i(t)\phi_j(t).
 \]
 
-Notice the second term is a two dimensional, finite sum. We now need to find norm. As before we can write this as an inner product: $\langle f'' - f^2, f'' - f^2 \rangle$. The above expression is in the form $a_1\phi_1'' + \dots + a_m\phi_m'' +  b_{11}\phi_1\phi_1 + \dots b_{mm}\phi_m\phi_m$, so we can represent it as $\mathbf{F(c)'AF(c)}$. The form above is a little awkward to work with. We would like to have it vary with one index only, or combine the $\phi_i''$ and the $\phi_i\phi_j$ together. We would define a function $\pi(n)$ that returns the appropriate function either some $\phi_i$ or $\phi_i\phi_j$ depending on the value. Defining such a function is tricky however. One function is as follows
+Notice the second term is a two dimensional, finite sum. We now need to find norm. As before we can write this as an inner product: $\langle f'' - f^2, f'' - f^2 \rangle$. The above expression is in the form $a_1\phi_1'' + \dots + a_m\phi_m'' +  b_{11}\phi_1\phi_1 + \dots b_{mm}\phi_m\phi_m$. This is a linear combination of a finite set of functions. So we can represent it as a quadratic form. The form above is a little awkward to work with. We would like to have it vary with one index only, or combine the $\phi_i'''$ and the $\phi_i\phi_j$ together. We would define a function $\pi(n)$ that returns the appropriate function either some $\phi_i$ or $\phi_i\phi_j$ depending on the value. Defining such a function is tricky however. One function is as follows
 
 \[
 	\pi(k) = \begin{cases}
@@ -487,20 +482,24 @@ The Lotka Volterra Equations are a model of the interactions of a prey and preda
 	   &= -\gamma y - \delta xy.  
 \end{align*}
 
-We will be using the standard dot product for our norms. In the standard inner product, the different terms are independent of each other; we only need to look at one equation, so without loss of generality we will find a formula for 
+We will be using the standard dot product for our norms. In the standard inner product, the different terms are independent of each other; we only need to look at one equation , so without loss of generality we will find a formula for 
 
 \[
 	\|x' - \alpha x - \beta xy\|^2.
 \]
 
-Here we are computing a ``one dimensional'' penalty. Notice we no longer assume anything about the signs of the coefficients. As usual the penalty is then expanded out as an inner product
+Here we are computing a ``one dimensional'' penalty. Notice we no longer assume anything about the signs of the coefficients.
+
+\smallskip
+
+By the usual methods we see
 
 \begin{align*}
 	\|x' - \alpha x - \beta xy\|^2 &= \langle x' - \alpha x - \beta xy, x' - \alpha x - \beta xy \rangle \\
 				      &= \|x'\|^2 + \alpha^2 \|x\|^2 + \beta^2 \|xy\|^2 + 2\alpha\beta\langle xy, x\rangle - 2\alpha \langle x', x\rangle - 2\beta \langle x', xy \rangle.
 \end{align*}
 
-The ``linear'' terms such as $\langle x', \alpha x \rangle$ have already been covered. We will look at the nonlinear terms instead.
+Many of the terms were covered in previous examples, so only examine the nonlinear interaction terms bear any serious examination. We will not bother defining the matrices that appear, as their definitions should be clear by now. 
 
 \smallskip
 
@@ -510,189 +509,13 @@ Firstly $ xy = \sum \sum b_i \phi_i c_j \phi_j.$ If we define $d = (b_1c_1, \dot
 	\|xy\|^2 = \mathbf{d'Kd}.
 \]
 
-Where $\mathbf{K}_{ikjl} = \langle \phi_i\phi_k, \phi_j\phi_l \rangle.$ In a similar manner we can write  $\langle x', xy \rangle = \mathbf{b'Pd}$, here $\mathbf{P}$ is only a $m \times m^2$ matrix because the space spanned by the products $\phi_i\phi_j$ is bigger than that spanned by the derivatives $\phi_i'.$ Its entries are given by the result $\mathbf{P}_{ijk}  = \langle \phi_i, \phi_j\phi_k \rangle.$ The exact same technique can be used to find $\langle x, xy \rangle.$ Combining all these results 
+Where $\mathbf{K}_{ikjl} = \langle \phi_i\phi_k, \phi_j\phi_l \rangle.$ We can devise similar results for all the other terms. 
 
 \smallskip
+
+We will use the $\operatorname{Vec}$ operator again to save space. Let $\mathbf{d} = \operatorname{Vec}(\mathbf{cb'})$ as before. We can express the penalty analytically
 
 \[
 	\|x' - \alpha x - \beta xy\|^2 = \mathbf{b'Kb} + \alpha^2 \mathbf{b'Lb} + \beta^2 \mathbf{d'M'd} + 2\alpha\beta \mathbf{d'Nb} - 2\alpha\mathbf{b'Ob} - 2\beta\mathbf{b'Pd}.
 \]
-
-\section{Burger's Equation}
-
-The theory of nonlinear partial differential equations is not much harder than that of nonlinear ordinary differential equations. We will look at the dimensionless Burger's eqation
-
-\[
-	u_{t} +uu_{x} = \epsilon u_{xx}
-\]
-
-This equation arises in the theory of shock waves. First we will derive the penalty for the inviscid Burger's Equation or the Riemann Equation
-
-\[
-	u_{t} + uu_{x} = 0
-\]
-
-As was the case for multivariate splines, we expand $u$ as a sum of basis functions $u(x,t) = c_1\phi_1(x,t) + \dots + c_M\phi_M(x,t).$ This equation is simpler than the Lotka Volterra system. Define our inner product $\langle u, v \rangle = \int_{\mathit{D}} u(x,t)v(x,t)dxdt.$ We must define $\|u_{tt} + uu_{xx}\|^2.$ If as before we let $\mathbf{d} = (c_1c_1, \dots, c_Mc_M)$ we can expand out the inner product.
-
-\begin{align*}
-	\langle u_{t} + uu_{x}, u_{t} + uu_{x} \rangle &= \|u_{t}\|^2 + 2\langle u_{t}, uu_{x} \rangle + \|uu_{x}\|^2 \\
-						       &= \mathbf{c'Kc} + 2\mathbf{c'Ld}  + \mathbf{d'Md}
-\end{align*}
-
-As usual $\mathbf{K}_{ij} = \langle \partial_{t}\phi_i, \partial_{t} \phi_j \rangle, \mathbf{L}_{ijk} = \langle \partial_{t}\phi_i, \phi_j\partial_{x}\phi_k\rangle$ and $\mathbf{M}_{ijkl} = \langle \phi_i\partial_{x}\phi_j, \phi_k\partial_{x}\phi_l\rangle.$
-
-\smallskip
-
-Returning to the full Burger's equation we can see break up the penalty
-
-\[
-	\|u_{t} +uu_{x} - \epsilon u_{xx}\|^2 = \|u_{t} + uu_{x}\|^2 - 2\epsilon\langle u_{t} + uu_{x}, u_{xx} \rangle + \epsilon^2\|u_{xx}\|^2
-\]
-
-We just derived an expression for the first term, and we have already covered the calculation of expressions of the form $\|u_{xx}\|^2,$ so we only need to concentrate on the inner product term. Using the bilinearity of the inner product we need only find expressions for $\langle u_{t}, u_{xx}\rangle$ and $\langle uu_{x}, u_{xx} \rangle.$. The first term can be written as $\mathbf{c'Oc},$ where $\mathbf{O}_{ij} \langle \partial_{t}\phi_i, \partial_{x}^2\phi_j\rangle$. The second term is of the form $\mathbf{c'Pd},$ where $\mathbf{P}_{ijk} = \langle \partial_{x}^2\phi_i, \partial_{x}\phi_j\phi_k\rangle.$
-
-\section{Fisher's Equation}
-
-In one dimension Fisher's Equation takes the form
-
-\[
-	u_{t} = u(1-u) + u_{xx}
-\]
-
-As was the case for Burger's Equation, we will simplify by dealing with the penalty piecemeal. If we remove the $u_{xx}$ we get the logistic equation $u_{t} = u(1-u).$
-By the usual methods we get
-
-\begin{align*}
-	\|u_{t} - u(1-u)\|^2 &= \|u_{t}\|^2 + \|u\|^2 + \|u^2\|^2 + 2\langle u_{t}, u \rangle + 2\langle u_{t}, u^2 \rangle + 2\langle u, u^2 \rangle \\
-			     &= \mathbf{c'Kc} + \mathbf{c'Lc} + \mathbf{d'Md} + 2\mathbf{c'Nd} + 2\mathbf{c'Od} + 2\mathbf{d'Pd}
-\end{align*}
-
-As before we can add in the $u_{xx}$ term and we find that $\|u_{t} - u(1-u) - u_{xx}\|^2 = \|u_{t} - u(1-u)\|^2 -2 \langle u_{t} - u - u^2, u_{xx} \rangle + \|u_{xx}\|^2$ We have already encountered most of the terms already. The term $\langle u^2, u_{xx}\rangle$ is similar to the term $\langle uu_{x}, u_{xx}$ from Burger's equation and can be dealt with in a similar manner.
-
-\smallskip
-
-If the equation has constants, such that $u_{t} = ru(1-u) + Du_{xx}$ then the terms can be scaled, which we will demonstrate below.
-
-\smallskip
-
-This system of equations only applies to the line though. If we wish to genearlise to any euclidean space we have 
-
-\[
-	u_{tt} = ru(1-u) + D \Delta u
-\]
-
-The inner product must be extended to multiple dimensions: $\langle u, v \rangle = \int_\mathit{D} u(\mathbf{x}, t)v(\mathbf{x}, t)\mathbf{dx}\mathrm{dt}.$ The penalty becomes
-
-\begin{equation*}
-\begin{split}
-	\|u_{tt} - ru(1-u) - D \Delta u \|^2 &= \|u_{tt}\|^2 + r^2\|u\|^2 + r^2\|u^2\|^2 D^2\|\Delta u\|^2 + 2r\langle u_{tt}, u\rangle + 2r\langle u_{tt}, u^2 \rangle + \\
-					     & 2D\langle u, \Delta u  \rangle + 2r^2\langle u, u^2 \rangle + 2rD\langle u, \Delta u \rangle + 2rD\langle u^2, \Delta u \rangle
-\end{split}
-\end{equation*}
-
-We have already encountered most of these terms before. The prescence of the laplacian in place of the $\partial_{x}^2$ operator does not make things much more complicated from the point of view of manipulating these expressions. For example the terms $\langle u^2, u_{xx}\rangle$ and $\langle u^2, \Delta u \rangle$ are both in the form $\mathbf{c'Kd},$ where $\mathbf{d} = (c_1c_1, \dots , c_Mc_M)$ as usual. In the first case $\mathbf{K}_{ijk} = \langle \phi_{i}\phi_{j}, \partial_{x}^2\phi_k\rangle$ whilst in the latter $\mathbf{K}_{ij} - \langle \phi_{i}\phi_{j}, \Delta \phi_k\rangle.$
-
-\section{Tidal Bore Equations}
-
-The tidal bore equations are the following system of partial differential equations
-
-\begin{align*}
-	u_{t} +uu_{x} + h_{x} &= 0 \\
-	    h_{t} + hu_{x} + h_{x}u &= 0
-\end{align*}
-
-We write $u = \sum u_i\phi_i(x,t)$ and $h = \sum h_i\phi_i(x,t).$ We must calculate two penalties. We will cover the second one first. We see
-
-\[
-	\|h_{t} + hu_{x} + h_{x}u\|^2 = \|h_{t}\|^2 + \|hu_{x}\|^2 + \|h_{x}u\|^2 + 2\langle h_{t}, hu_{x}\rangle + 2\langle h_{t}, h_{x}u \rangle + 2\langle h_xu, hu_x \rangle
-\]
-
-If we let $\mathbf{c} = (u_1, u_1, \dots, u_Mu_M), \mathbf{d} = (u_1h_1, \dots, u_Mh_M)$ and $\mathbf{f} = (h_1h_1, h_Mh_M),$ we can begin representing terms. The penalty can be written as
-
-\[
-	\mathbf{h'Kh} + \mathbf{d'Ld} + \mathbf{d'Ld} + 2 \mathbf{h'Md} + 2\mathbf{h'Md} + 2\mathbf{d'Nd}.
-\]
-
-In this case $\mathbf{K}_{ij} = \langle \phi_i, \phi_j \rangle, \mathbf{L}_{ijkl} = \langle \phi_i\partial_{x}\phi_j, \phi_k \partial_{x}\phi_l \rangle, \mathbf{N}_{ijk} = \langle \partial_{t}\phi_i, \phi_j \partial_{x}\phi_k.$ Many matrices appear twice because of the fact we are using the same basis for $u$ and $h$. This means that for example $h_{x}u$ and $hu_{x}$ both look like linear combinations of terms such as $\phi_i\partial_{x}\phi_j$. 
-
-\smallskip
-
-This phenomena also means that we can recycle these matrices for the first equation. The penalty is
-
-\[
-	\|u_{t} + uu_{x} + h_{x}\|^2 = \mathbf{u'K'u} + \mathbf{c'Lc'} + \mathbf{h'Oh} + 2\mathbf{h'Pc} + 2\mathbf{h'Qu} + 2\mathbf{u'Rc}. 
-\]
-The additional matrices represent inner products not present in the original system $\mathbf{O}_{ij} = \langle \partial_{x}\phi_i, \partial{x} \phi_j \rangle, \mathbf{P}_{ijk}=\langle \partial_{x} \phi_i, \phi_j\partial_{x} \phi_k \rangle, \mathbf{Q}_{ij} = \langle \partial_{x}\phi_i, \partial_{t}\phi_j\rangle, \mathbf{R}_{ijk} =  \langle \partial_{t} \phi_i, \phi_j \partial_{x}\phi_k \rangle.$
-
-
-\section{Abstract Theory}
-
-Some of the definitions here could be given in a more general form, but they will be given here with the aim of proving specific results instead of building a whole theory.
-\begin{definition} 
-	The sum of two vector spaces $\mathit{V}$ and $\mathit{W}$, $\mathit{V} + \mathit{W}$ is defined to be the set of all sums of them, $\mathit{V} + \mathit{W} = \{v + w| v \in \mathit{V}, w \in \mathit{W}\}.$ The sum of $n$ vector spaces $\mathit{V}_1 + \dots + {V}_n$ is defined recursively as $(\mathit{V}_1 + \dots + \mathit{V}_{n-1}) + \mathit{V}_{n-1}.$
-\end{definition}
-
-If $\mathit{V}$ and $\mathit{W}$ share the same identity element, then $\mathit{V}$ and $\mathit{W}$ are subspaces of $\mathit{V} + \mathit{W}.$ This can be seen since $\mathit{V} = \{v + 0| v \in \mathit{V}\}.$ This condition will always hold if $\mathit{V}$ and $\mathit{W}$ are subspaces of some other subspace.
-
-\begin{definition}
-	The product $\mathit{V}_1 \times \dots \times \mathit{V}_n$ of $n$ vector spaces $\{\mathit{V}_1, \dots, \mathit{V}_n\}$ is defined as the set of $n$-tuples $(v_1, \dots, v_n), v_k \in \mathit{V}_k.$ 
-\end{definition}
-
-Define an addition operation by $(v_1, \dots, v_n) + (w_1, \dots, w_n) = (v_1 + w_1, \dots, v_n + w_n)$, scalar multiplication by $\alpha(v_1, \dots, v_n) = (\alpha v_1, \dots, \alpha v_n)$ and an additive identity $0_{\mathit{V}_1 \times \dots \times \mathit{V}_n}  = (0_{\mathit{V}_1}, \dots, 0_{\mathit{V}_n})$ and we can form a new vector space.
-
-We will be working in finite dimensional spaces, so any vector space $\mathit{V}$ will have a basis $\{w_1, \dots, w_n\}$ such that any $v \in \mathit{V}$ can be written as $c_1w_1 + \dots + c_nw_n$. The scalars $c_k$ are called coefficients or coordinates.
-
- \begin{theorem} Let $\mathit{X}$ be an $m$ dimensional vector space, and $\mathit{Y}$ be an $n$ dimensional inner product space, with an inner product denoted by $\langle \cdot, \cdot \rangle.$ Let $f: \mathit{X} \rightarrow \mathit{Y}$ be a function from $\mathit{X}$ to $\mathit{Y}.$ Let $x$ be an arbitrary element of $\mathit{X}$ and $\mathbf{x} = (x_1, \dots,x_m)$ be the vector of its coordinates. Then there exists a vector field $\mathbf{F}: \mathbb{R}^m \rightarrow \mathbb{R}^n$ and an $n \times n$ matrix $\mathbf{K}$ such that $\|f(x)\|^2 = \langle f(x), f(x) \rangle = \mathbf{F(x)'KF(x)}$
- \end{theorem}
-	
-\begin{proof}
-	Every $y \in \mathit{Y}$ is determined by (or isomorphic to) its coordinates $(y_1, \dots, y_n), f(x) \in \mathit{Y}$ is determined by $x$ so we can write the coefficients of $f(x)$ as $(f_1(x), \dots, f_n(x) = (\mathbf{F}_1(\mathbf{x}), \dots, \mathbf{F}_n(\mathbf{x})) = \mathbf{F(x)}.$ For any $v, w \in \mathit{X}$ we can expand out the inner product. Let $\{y_1, \dots, y_n\}$ be a basis for $\mathit{Y}$, then
-\begin{align*}
-	\langle v,w \rangle &= \langle \sum_{i=1}^nv_iy_i, \sum_{i=1}^nw_iy_i \rangle \\
-			    &= \sum_{i=1}^n\sum_{j=1}^n\langle v_iy_i, w_jy_j \rangle \\ 
-			    &= \sum_{i=1}^n\sum_{j=1}^nv_iw_j\langle y_i, y_j \rangle \\
-			    &= \sum_{i=1}^n\sum_{j=1}^nv_iw_jk_{ij} \\ 
-			    &= \mathbf{v'Kw}
-\end{align*}
-
-Here $\mathbf{v} = (v_1, \dots, v_n), \mathbf{w} = (w_1, \dots, w_n)$ and $\mathbf{K}$ is a matrix whose entries are give by $\mathbf{K}_{ij}= \langle y_i, y_j \rangle.$ Hence $\langle f(x), f(x) \rangle = \mathbf{F(x)'KF(x)}.$
-
-\end{proof}
-
-In the context of functional data analysis, all our vector spaces are finite combinations of functions $c_1\phi_1 + \dots + c_k\phi_k.$ These spaces are all subspaces of $\mathit{L}^2(\mathit{D})$ for some appropriate domain $\mathit{D}$ and so the finite spaces are also inner product spaces; they inherit the inner product from $\mathit{L}^2(\mathit{D}).$ If we have an operator $T$ acting on $\mathit{L}^2(\mathit{D})$ and it maps linear combinations of functions onto linear combinations of functions, then we can appeal to the theorem and use it to find an expression for $\|Tf\|^2,$ for $f = c_1\phi_1 + \dots + c_k\phi_k$. 
-
-\smallskip
-\begin{example} If $Tf = f^2,$ then $T(c_1\phi1 + \dots + c_2\phi_2) = c_1^2\phi_1^2 + c_1c_2\phi_1\phi_2 + \dots + c_k^2\phi_k^2.$ This operator maps the set spanned by the basis functions $\{\phi_k\}$ into the set spanned by their products $\{\phi_k\phi_l\},$ so we can use the above theorem to derive an expression for $\|f^2\|^2 = \int_{\mathit{D}}f^4\mathbf{dx}$. If we let $\mathbf{d} = (c_1c_1, c_1c_2, \dots, c_kc_k),$ then it is given by $\mathbf{d'Kd},$ where $\mathbf{K}$ is an $k^2 \times k^2$ matrix with $\mathbf{K}_{ijkl} = \langle \phi_i\phi_j, \phi_k\phi_l\rangle.$
-\end{example}
-
-If we have an operator $T$ has this property, then it is trivial to see that $\alpha T$ also has this property as vector spaces are close under scalar multiplication. If there are two operators $T$ and $S$ that map a finite dimensional vector space $\mathit{V}$ to subsets of the vector spaces $T(\mathit{V})$ and $S(\mathit{V})$ respectively. Then the sum of the two operators $T + S$ maps $\mathit{V}$ to some subset of $T(\mathit{V}) + S(\mathit{V}).$ When we introduced the notation $\alpha T$ and $T + S$ we implicitly assumed that that our operators always come from some vector space, taking this into account we get a theorem.
-
-\begin{theorem}
-	If we have a vector space of operators on some set of functions, then the set of operators that map finite dimensional vector spaces to subsets of finite dimensional vector spaces form a vector subspace.
-\end{theorem}
-
-\begin{theorem}
-	If two operators $T$ and $S$ map every finite dimensional vector subspaces to subset of some other finite dimensional vector spaces, then so does their composition $T \circ S,$ defined by $(T \circ S)f = T(Sf).$
-\end{theorem}
-\begin{proof}
-	By assumption, $S$ maps a finite dimensional vector space $\mathit{V}$ to a subset of a finite dimensional vector space $S(\mathit{V}),$ which is in turn mapped to a subset of a finite dimensional vector space by $T.$
-\end{proof}
-
-\begin{corollary}
-	If $n$ operators $\{T_i\}$ map finite dimensional vectors spaces to subsets of finite dimensional vector spaces, so does their composition $T_1 \circ \dots \circ T_n$
-\end{corollary}
-\begin{proof}
-	We will work by induction. We have already shown the proposition to hold for $n = 2.$ Assume that the proposition holds for $n = k-1.$ Then for $n = k$ write $T_1 \circ \dots \circ T_k = (T_1 \circ \dots \circ T_{k-1}) \circ T_{k}.$ We know the proposition holds for $T_k$ by assumption and for $T_1 \circ \dots \circ T_{k-1}$ by the induction hypothesis, it follows from the $n = 2$ case that their composition also satisfies the proposition.
-\end{proof}
-
-\begin{definition}
-	An $n$-linear operator is a linear operator on the product of $n$ vector spaces $V_1 \times \dots \times V_n.$ A $2$-linear operator is also called a bilinear operator.
-\end{definition}
-
-\begin{example}
-	If we had two functions $x$ and $y$ in $\mathit{L}^2(\mathit{D}),$ then the m $xy^2$ would be $3$-linear.
-\end{example}
-
-
 \end{document}
-
