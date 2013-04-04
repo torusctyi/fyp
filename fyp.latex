@@ -6,6 +6,7 @@
 \usepackage{amsthm}
 \usepackage{graphicx}
 
+\newcommand{\qedbox}{\hspace{\fill} \qedsymbol}
 \theoremstyle{theorem}
 \newtheorem{theorem}{Theorem}
 \newtheorem{corollary}{Corollary}
@@ -36,11 +37,12 @@ Fitting sophisticated mathematical functions to empirical data continues to be a
 
 \smallskip
 
-Here, $\mathbb{E}[y|t]$ is the conditional expectation of the dependent variable $y$, given our independent data $x$. The conditional expectation $\mathbb{E}[y|t]$ is the estimate of $y$ depending exclusively on $t$ that minimises the squared loss $\mathbb{E}[y(t) - E[y|t]]^2$. This is a theoretical optimiser, and so in practice we must make do with an estimate $\widehat{\mathbb{E}[y|t]}$ instead, using our basis functions $\{\phi_k\}$
+Here, $\mathbb{E}[y|t]$ is the conditional expectation of the dependent variable $y$, given our independent data $x$. The conditional expectation $\mathbb{E}[y|t]$ is the choice of $y$ depending exclusively on $t$ that minimises the squared loss $\mathbb{E}[y(t) - E[y|t]]^2$. This is a theoretical optimiser, and so in practice we must make do with an estimate $\widehat{\mathbb{E}[y|t]}$ instead, using our basis functions $\{\phi_k\}$
 
 \begin{example}(Simple Linear Regression) Simple linear regression is an example of a statistical procedure that uses a basis function representation. Take two basis functions $\{1, t\}$, so that $\hat{y}(t)$, our estimate of $y$ given the value $t$, can be written as a linear combination of the two $\widehat{\mathbb{E}[y|t]} = \hat{y}(t) = c_0 + c_1t.$ This is the form of a simple linear regression model. If our basis consists of just the single constant function $\phi(t) = 1$ then we get a model of the form $\hat{y} = c_0.$ In this case we would generally use the mean of the $y$ values as our estimate of $c_0$. If we go in the other direction and add a quadratic function $t^2$ we get a quadratic regression model $\hat{y}(t) = c_0 + c_1t + c_2t^2.$
 
-\qedsymbol
+\qedbox
+
 \end{example}
 
 \begin{example}(Broken Stick Function)  Another choice of basis is the two functions $\{\phi_1, \phi_2\}$ defined as follows
@@ -69,13 +71,14 @@ This basis would work very well for representing data which starts to increase l
 
 \smallskip
 
-Ramp functions are the building blocks for the ``p-splines'' developed by Eiler and Marx. P-splines are a precursor to the penalty based approach used here. P-splines penalise the coefficients, whereas we will penalise the generated curve.
+Ramp functions are the building blocks for the ``P-splines'' developed by Eiler and Marx. P-splines are a precursor to the penalty based approach used here. P-splines penalise the coefficients, whereas the focus here is to penalise the generated curve for some operator of it.
 
 \smallskip
 
 The above basis has two disadvantages though. Firstly the second basis function is only continuous, not differentiable. It would not be wise to use this basis if we wanted to estimate $\mathrm{d}y/\mathrm{d}t$. Secondly it is very arbitrary. It is not obvious why it would be useful compared to a quadratic model for example; the latter also allows to us estimate derivatives of all orders and can still accommodate data which varies in its rate of change.
 
-\qedsymbol
+\qedbox
+
 \end{example}
 
 This underscores an important point. There are many types of basis besides the ones usually encountered, such as polynomial bases. Many of them are fungible from the pure mathematical point of view in terms of how well they can fit a function. The statistician should make a sensible choice of basis. If our choice of basis is good, then it will be able to fit the data with only a few terms, and we might be able to avoid estimating many coefficients. This is one of the reasons why simple linear regression and quadratic regression are useful; they can capture much variation in the observed data in spite of being very simple.
@@ -85,20 +88,20 @@ If our data has a periodic component to it, such as the observed temperature ove
 
 \smallskip
 
-Furthermore Fourier basis functions have several other desirable properties. They are smooth, meaning that they can be used to estimate any derivative of the data, at least in theory. They are orthogonal, which can make certain problems more convenient and they are closed under differentiation, meaning that the derivative of a combination of Fourier basis functions, is itself a combination of Fourier basis functions. The latter two properties will prove very useful later, as we shall see. 
+Furthermore, Fourier basis functions have several other desirable properties. They are smooth, meaning that they can be used to estimate any derivative of the data, at least in theory. They are orthogonal, which can make certain problems more convenient and they are closed under differentiation, meaning that the derivative of a combination of Fourier basis functions, is itself a combination of Fourier basis functions. The latter two properties will prove very useful later. 
 
 \smallskip
 
-A Fourier basis can represent  any square integrable function on some interval. This covers a large proportion of the functions encountered in real life  They cannot detect how frequencies change in space however, only their global behaviour. They can also be somewhat mundane - almost certain to work, but unlikely to provide anything too interesting.
+A Fourier basis can represent  any square integrable function on some interval. This covers a large proportion of the functions encountered in real life  They cannot detect how frequencies change in space however, only their global behaviour. 
 
 \smallskip
-\qedsymbol
+\qedbox
 \end{example}
 \begin{example}(B-spline Basis Functions) Roughly speaking, B-splines are compactly supported polynomial functions, or more practically they are nonzero only inside of a given interval. More formally a B-Spline basis consists of a degree $n$, which determines the degree of the basis functions, and a set of knots, that is a set of $K$ time points $\{t_0, \dots, t_K\}$. 
 
 \smallskip
 
-Since they are compact they generally can only individually capture local information about the data. One of the main advantages of B Splines is that they can represent any other spline of the same degree and smoothness with the same knots. This makes them useful for statistics since make fewer assumptions less about the form of the data, they can help us avoid bias.
+Since they are compact they generally can only individually capture local information about the data. One of the main advantages of B Splines is that they can represent any other spline of the same degree and smoothness with the same knots. This makes them useful for statistics since make they fewer assumptions about the form of the data than other families of splines. For example the so-called natural cubic splines require that the second derivative of the fitted spline curve be zero at the boundary of the domain on which it is supported. If this was not true of the processes generating the data, then this could be a source of bias.
 
 $\square$
 \end{example}
@@ -115,10 +118,10 @@ Least squares fitting is a means of fitting a function to data. The least square
 
 \smallskip
 
-Assume $\mathit{S}$ can be spanned by some set of $m$ basis functions i.e. $\mathit{S} = \{\sum\limits_{i = 1}^mc_i\phi_i(t)| c_i \in \mathbb{R}\}$. This suggests that to find $\hat{y}(t)$ it is only necessary to estimate to coefficients $\hat{c}_i$, so that $\hat{y}(t)$ never appears explicitly. Then we have completely determined $\hat{y}$. We can then write the least squares criterion as:
+Assume $\mathit{S}$ can be spanned by some set of $m$ basis functions i.e. $\mathit{S} = \{\sum\limits_{i = 1}^mc_i\phi_i(t)| c_i \in \mathbb{R}\}$. This suggests that to find $\hat{y}(t)$ it is only necessary to estimate to coefficients $\hat{c}_i$, so that $\hat{y}(t)$ never appears explicitly. Then we have completely determined $\hat{y}$. We can then write the estimate of the vector of coefficients $\hat{\mathbf{c}} = (\hat{c}_1, \dots, \hat{c}_m)$ as:
 
 \[
-	(\hat{c}_1, \dots, \hat{c}_m)  = \underset{c_1 \dots c_K}{\operatorname{argmin}} \sum_{i=1}^n[y_i - \sum_{j=1}^m c_j\phi_j(t_i)]^2
+	\hat{\mathbf{c}}  = \underset{\mathbf{c} \in \mathbb{R}^m}{\operatorname{argmin}} \sum_{i=1}^n[y_i - \sum_{j=1}^m c_j\phi_j(t_i)]^2.
 \]
 
 The above expression is can be expressed more cleanly using vector notation. Firstly, we  have $f(t) = \mathbf{c'\phi(t)}$, where $\mathbf{c} = (c_1,..., c_m)$ and $\mathbf{\phi} = (\phi_1(t), \dots, \phi_2(t))'$.  By constructing a matrix $\mathbf{\Phi}$, where the $i$th row of $\mathbf{\Phi}$ is $\mathbf{\phi}(t_i)$, and let $\mathbf{y} = (y_1, \dots, y_n)$ the least squares problem  can written as
@@ -129,10 +132,10 @@ The above expression is can be expressed more cleanly using vector notation. Fir
 
 The expression on the right hand side is an example of a quadratic form, they are the generalisation of quadratic functions to finite dimensional vector spaces. We can have quadratic forms on infinite dimensional vectors spaces too, but that is not relevant here.
 
-The advantage of quadratic forms is that they are very easy to minimise as any textbook on regression or numerical optimisation will tell you.
+The advantage of quadratic forms is that they are very easy to minimise, one can use the normal equation, or compute the gradient and use an algorithim (or class of algorithms) such as conjugate gradient, quasi Newton methods or the Levenberg-Marquardt method.
 \section{Roughness Penalties}
 
-It is well known that the least squares gives us the BLUE of $\mathbf{y},$ the function we assume to be generating the data. Nonetheless it is often useful to employ a form of regularisation which constrains how much $\hat{y}$ is allowed to vary. Intuitively, this reduces the variation of $\hat{y}$ and helps guard against overfitting. In the context of basis function expansions, the most commonly used penalty is the curvature penalty
+If we assume that at a given time $t$ that, $\mathbf{y}(t) = \mathbf{\Phi}(t)\mathbf{c} + \mathbf{e(t)}$ where the elements of $\mathbf{e}$ are i.i.d. and have well defined second moments, thee least squares gives us the best linear unbiased estimator (BLUE) of $\mathbf{y},$ the function we assume to be generating the data. Nonetheless it is often useful to employ a form of regularisation which constrains how much $\hat{y}$ is allowed to vary. Intuitively, this reduces the variation of $\hat{y}$ and helps guard against overfitting. In the context of basis function expansions, the most commonly used penalty is the curvature penalty
 
 \[
 	\mathrm{PEN}(\hat{y}) = \int_\mathit{D}[\hat{y}''(t)]^2\mathrm{d}t.
@@ -142,36 +145,36 @@ It is well known that the least squares gives us the BLUE of $\mathbf{y},$ the f
 
 \smallskip
 
-This penalty tries to force $\hat{y}(t)$ towards solutions of the differential equation $\hat{y}''(t) = 0$. The general solution of this ODE is of the form $\hat{y}(t) = \alpha + \beta t$, a straight line. The penalty nudges $\hat{y}(t)$ towards linear regression.
+This penalty tries to require $\hat{y}(t)$ to satisfy the differential equation $\hat{y}''(t) = 0$. The general solution of this ODE is of the form $\hat{y}(t) = \alpha + \beta t$, a straight line. The penalty has the effect of nudging $\hat{y}(t)$ towards linear regression.
 
 \smallskip
 
-This penalty can also be represented as a polynomial. Let $\langle f,g \rangle = \int_\mathit{D}f(t)g(t)\mathrm{d}t.$ Here, $\langle \cdot, \cdot \rangle$ is the inner product on $\mathit{L}^2(\mathit{D})$, the set of square integrable functions on $\mathit{D}.$ The penalty can be written in the form $\mathrm{PEN}(f) = \langle f'', f''\rangle$. Substituting in the expansion for $f$ we get
+The penalty can also be represented as a polynomial. Let $\langle f,g \rangle = \int_\mathit{D}f(t)g(t)\mathrm{d}t.$ Here, $\langle \cdot, \cdot \rangle$ is the inner product on $\mathit{L}^2(\mathit{D})$, the set of square integrable functions on $\mathit{D}.$ The penalty can be written in the form $\mathrm{PEN}(f) = \langle f'', f''\rangle$. Substituting in the expansion for $f$ we get
 
 \begin{align*}
-	\langle f'', f'' \rangle &= \langle \sum_{i=1}^mc_i\phi_i'', \sum_{i=1}^mc_i\phi_i'' \rangle \\	
-				 &= \sum_{i=1}^m\sum_{j=1}^m\langle c_i\phi_i'', c_j\phi_j'' \rangle \\ 
-				 &= \sum_{i=1}^m\sum_{j=1}^mc_ic_j\langle \phi_i'', \phi_j'' \rangle.
+	\langle f'', f'' \rangle &= \langle \sum_{i=1}^mc_i\phi_i'', \sum_{i=1}^mc_i\phi_i'' \rangle, \\	
+				 &= \sum_{i=1}^m\sum_{j=1}^m\langle c_i\phi_i'', c_j\phi_j'' \rangle, \\
+				 &= \sum_{i=1}^m\sum_{j=1}^mc_ic_j\langle \phi_i'', \phi_j'' \rangle, \\
+				 &= \mathbf{c'Kc}, \text{where $\mathbf{c} = (c_1, \dots, c_m)$ is a vector} 
 \end{align*}
 
-Here, $\langle \phi_i'', \phi_j'' \rangle$ depends only on our choice of basis and so are ``fixed''
-for our purposes. This implies that the penalty can be represented as a polynomial in the $c_i$. We can do better however and represent the penalty as a quadratic form. If we define an $m \times m$ matrix $\mathbf{K}$ by $\mathbf{K}_{ij} = \langle \phi_i'', \phi_j'' \rangle$ it can be seen that $\langle f'', f'' \rangle = \mathbf{c'Kc}$.  
+Here, $\langle \phi_i'', \phi_j'' \rangle$ depends only on our choice of basis, since this generally doesn't change in the middle of an analysis, we can treat these terms as ``fixed'' for our purposes. In the last line the penalty term was represented as a quadratic form by defining an $m \times m$ matrix $\mathbf{K}$ by $\mathbf{K}_{ij} = \langle \phi_i'', \phi_j'' \rangle$ it can be seen that $\langle f'', f'' \rangle = \mathbf{c'Kc}$.  
 
 \smallskip
 
-Note that this relies on the fact that the second derivative operator maps a linear combination of $\phi_i$ into a linear combination $\phi_i''$. We can always represent an inner product on some finite vector space as $\mathbf{b'Ab}$, where the terms depend on the problem at hand. We can simply construct the matrix $\mathbf{A}$ for the $\phi_i''$ and have the $\mathbf{c}$ in place of the $\mathbf{b}$ because differentiation is linear.
+The linearity property of the differentiation operator to expand out the inner product term, this technique is very useful for problems such as these.
 
 
 \section{Penalised Least Squares}
 
-There are two distinct, but competing objectives. We want a fit $\hat{y}$ that maintains fidelity to the data, as represented by the goodness of fit, but simultaneously adheres to the requirement of a smooth description of the data. 
+When fitting curves to data, there are two distinct, but competing objectives. We want a fit $\hat{y}$ that maintains fidelity to the data, as represented by the goodness of fit, but simultaneously adheres to the requirement of a smooth description of the data. 
 
 \smallskip
 
 The solution is to use a penalty that incorporates both of these objectives, the penalised sum of squared errors. The penalised sum of squared errors is a functional, or a function whose domain is a set of functions and whose codomain is the real numbers. Here it is a functional on the spanning set of our basis functions $\{\phi_i(t)\}.$ It is the weighted sum of the roughness and least squares penalties
 
 \[
-	\mathrm{PENSSE}(f) = \sum_{i = 0}^n (y_i - f(t_i)^2 + \lambda \int_\mathit{D} [f''(t)]^2\mathrm{d}t.
+\mathrm{PENSSE}(f) = \sum_{i = 0}^n [y_i - f(t_i)]^2 + \lambda \int_\mathit{D} [f''(t)]^2\mathrm{d}t.
 \]
 
 The parameter $\lambda$ controls the tradeoff between error and smoothness as represented by the least squares and roughness terms respectively. It can be thought of as a model complexity parameter; as $\lambda$ increases $\hat{y}(t)$ becomes more linear and so our model tends more towards simple linear regression, as it decreases the model tends more towards fitting the data exactly. 
@@ -182,7 +185,7 @@ In polynomial regression the analogous parameter would be the order of the polyn
 
 \smallskip
 
-\par\noindent We can also think of $\lambda$ as controlling the degree of fidelity of the fitted curve to the ODE $\hat{y}''(t) = 0$.
+\par\noindent We can also think of $\lambda$ as controlling how closely the fitted curve adheres to the ODE $\hat{y}''(t) = 0$.
 
 \smallskip
 
@@ -190,7 +193,7 @@ The choice of $\lambda$ is important; strictly speaking we ought to denote $\hat
 
 \smallskip
 
-Assume again that $\hat{y}(t)$ is the sum of basis functions, depending on a vector of coefficients $\mathbf{\hat{c}}$. This means we can omit the dependence on $\hat{y}(t)$ and convert from the problem of estimating a function to estimating a vector $\mathbf{\hat{c}(\lambda)}$ (or just simply $\mathbf{\hat{c}}$) which depends on our choice of smoothing parameter. Using the previous results we can show that the Penalised Sum of Squares can be written as the sum of two quadratic forms:
+Assume again that $\hat{y}(t)$ is the sum of basis functions, depending on a vector of coefficients $\mathbf{\hat{c}}$. This means we can omit the dependence on $\hat{y}(t)$ and convert from the problem of estimating a function to estimating a vector $\mathbf{\hat{c}(\lambda)}$ (or just simply $\mathbf{\hat{c}}$) which depends on our choice of smoothing parameter. Using the previous results we can show that the penalised sum of squares can be written as the sum of two quadratic forms:
 
 \[
 	\mathrm{PENSSE}(c) = (\mathbf{y - \Phi c})'(\mathbf{y - \Phi c}) + \lambda \mathbf{c}'\mathbf{Kc}.
@@ -200,12 +203,18 @@ Where $\mathbf{y}$, $\mathbf{K}$ and $\mathbf{\Phi}$ have the same definitions a
 
 \begin{align*}
 	\mathbf{\hat{c}(\lambda)} &= \mathbf{(\Phi'\Phi + \lambda K)^{-1}\Phi'y} \\ 
-			 &= \mathbf{H}(\lambda)\mathbf{y}
+			 &= \mathbf{M}(\lambda)\mathbf{y}.
 \end{align*}
 
-If this problem is looked at from the perspective of linear models, as in Christessen, then $\mathbf{y} = \mathbf{\Phi c + e}$, where the elements of $\mathbf{e}$ are i.i.d and have mean zero and variance $\sigma^2$, then we can estimate the variance of $\hat{y}(t).$ We will denote the hat matrix $\mathbf{H}(\lambda)$ by $\mathbf{H}.$
+Where we assume the inverse $\mathbf{M}(\lambda)$ exists. 
 
-We have $\mathbf{\hat{c}} = \mathbf{H(\Phi c + e)},$ so $\mathbb{E}[\mathbf{\hat{c}}] = \mathbf{H\Phi c}.$ Note $\mathbf{\hat{c}}$ can be a biased estimate of $\mathbf{c}$. The variance of $\mathbf{\hat{c}}$ is given by $\mathrm{Var}[\mathbf{\hat{c}}] = \sigma^2\mathbf{H\Phi\Phi' H'}.$ Hence the expected value of $\mathbf{\hat{y}}$ is $\mathbf{\Phi H\Phi c}$ and its variance is $\sigma^2 \mathbf{\Phi H\Phi\Phi' H'\Phi'}$.
+\smallskip
+
+If this problem is looked at from the perspective of linear models, as in Christessen, then $\mathbf{y} = \mathbf{\Phi c + e}$, where the elements of $\mathbf{e}$ are i.i.d and have mean zero and variance $\sigma^2$, then we can estimate the variance of $\hat{y}(t).$ We will denote the matrix $\mathbf{M}(\lambda)$ by $\mathbf{M}.$ The matrix $\mathbf{M}$ can be thought of as a sort of generalised projection matrix, since $\mathbf{M}(0)$ is the projection matrix on to the columns of $\mathbf{\Phi}.$
+
+We have $\mathbf{\hat{c}} = \mathbf{M(\Phi c + e)},$ so $\mathbb{E}[\mathbf{\hat{c}}] = \mathbf{H\Phi c}.$ The variance of $\mathbf{\hat{c}}$ is given by $\mathrm{Var}[\mathbf{\hat{c}}] = \sigma^2\mathbf{M\Phi\Phi' M'}.$ Hence the expected value of $\mathbf{\hat{y}}$ is $\mathbf{\Phi My}$ and its variance is $\sigma^2 \mathbf{\Phi M\Phi\Phi' M'\Phi'}$.
+
+Under the standard theory of linear models, the least squares estimate $\mathbf{M}(0)\mathbf{y}$ is the BLUE of $\mathbf{c}.$ The contrapostive of this is that any linear estimater, including those of the form $\mathbf{M}(\lambda)\mathbf{y}$, can only achieve better reduction in variance by incurring bias. Any unbiased linear estimtor or a linear biased estimator with higher variance than the least squares estimator will have a higher mean error than the least square estimator, and is not worth paying attention to. The only class of linear estimators that can hope to do better than the least squares estimator are those that incur some bias in the hopes of achieving a sufficient reduction in variance to reduce the total mean square error against the least squares estimator. The estimator $\mathbf{M}(\lambda)$ should belong to the category, or there is no point in using it, so it is biased by design.
 
 \section{Multivariate Bases}
 
@@ -235,22 +244,22 @@ Finding a least squares estimate is identical, so we will not cover it here.
 If the perturbation of the surface is small, then it can be shown that a model of the mechanics of surface is a PDE called the wave equation. Let $u(x,y,t)$ be the displacement of the membrane at position $(x,y)$ at time $t$. Then $u$ is assumed to satisfy the partial differential equation:
 
 \[
-	u_{tt} = c\Delta u.
+	u_{tt} = \frac{\partial^2 u}{\partial t^2} = c^2\Delta u.
 \]
 
-Here $u_{tt} = \partial^2u / \partial t^2$, $c$ is a parameter known as the wave speed and $\Delta$ is a differential operator known as the Laplacian. In two dimensions withCartesian coordinates the Laplacian is defined as  
+Here $u_{tt} = \partial^2u / \partial t^2$, $c$ is a parameter known as the wave speed and $\Delta$ is a differential operator known as the Laplacian. In two dimensions with Cartesian coordinates the Laplacian is defined as  
 
 \[
 	\Delta = \frac{\partial^2}{\partial x^2} + \frac{\partial^2}{\partial y^2}.
 \]
 
-We are interested in the steady state model, where the membrane doesn't move so that $u_{tt} = 0.$ Of course $u$ now only depends on the position so $u = u(x,y).$  In this case the wave equation reduces to Laplace's equation
+We are interested in the steady state model, where the membrane does not move so that $u_{tt} = 0.$ Of course $u$ now only depends on the position so $u = u(x,y).$  In this case the wave equation reduces to Laplace's equation
 
 \[
 	\Delta u = 0.
 \]
 
-\par\noindent Since the wave equation isn't completely valid and only an approximation, we should not expect the data adhere perfectly to Laplace's equation anymore  than we expect data to have a perfectly linear relationship. For example the surface could be bending too much for the wave equation to hold to high degree of accuracy. It is hoped that some use can be gotten out of the model though by using it in penalised regression with respect to the penalty function
+\par\noindent Since the wave equation is not completely valid and only an approximation, we should not expect the data adhere perfectly to Laplace's equation anymore than we expect data to have a perfectly linear relationship. For example the surface could be bending too much for the wave equation to hold to high degree of accuracy. It is hoped that some use can be gotten out of the model though by using it in penalised regression with respect to the penalty function
 \smallskip
 
 \[
@@ -261,7 +270,7 @@ As usual we use $\hat{u}(x,y)$ to denote the function that minimises the penalty
 
 \smallskip
 
-The interpretation of the penalty in this case is a little more subtle than before. Harmonic functions, as solutions to Laplace's equation are called, are not flat as if they were linear, though linear functions are clearly harmonic. The laplacian penalty has more ``give'' than the roughness penalty in one dimension, so we should not expect it to necessarily approach a plane as $\lambda$ increases. 
+The interpretation of the penalty in this case is a little more subtle than before. Harmonic functions, as solutions to Laplace's equation are called, are not flat as if they were linear, though linear functions are clearly harmonic. In two dimensions, compare the laplancian penalty to the curvature penalty that also generalises the one dimensional roughness penalty $\int_{\mathit{D}}[(u_{xx})^2 + (u_{xy})^2 + (u_{yy})^2]\mathrm{d}x\mathrm{d}y.$ This penalty attempts to constrain all second order derivatives to zero. There are many harmonic functions which can vary over their domain, e.g $f(x,y) = e^x\sin(y).$ The laplacian penalty has more ``give'' than such penalties on functions, so we should not expect it to necessarily encourage the fitted surface to approach a plane as $\lambda$ increases. 
 
  Generally $\lambda$ would be chosen by a cross-validation approach as was the case for the roughness penalty. It is interesting to speculate about the implications of the order of magnitude of $\lambda$ that optimises the cross-validation score. It could be thought of as a proxy for the validity of Laplace's equation. Intuitively the higher $\lambda$ is the more the Laplacian penalty is emphasised, and so the more likely the model is to be valid. 
 
@@ -280,22 +289,22 @@ Then the laplacian penalty can be written as
 	\int_{\Omega} |\Delta f(\mathbf{x})|^2 \mathbf{dx} = \langle \Delta f, \Delta f \rangle.
 \]
 
-If $f = \sum c_i\phi_i$ then $\Delta f = \sum c_i \Delta \phi_i$. In the same manner as the previous roughness penalty, we can see that if f is a basis expansion then we can write the penalty as a polynomial in the coefficients
+If $f = \sum c_i\phi_i$ then $\Delta f = \sum c_i \Delta \phi_i$. In the same manner as the previous roughness penalty, we can see that if $f$ is a basis expansion then we can write the penalty as a polynomial in the coefficients
 
 \[
 	\langle \Delta f, \Delta f \rangle = \sum_{i=1}^m\sum_{j=1}^m c_ic_j \langle \Delta \phi_i, \Delta \phi_j \rangle.
 \]
 
-This can of course be written as $\mathbf{c'Kc}$ where $\mathbf{K}_{ij} = \langle \Delta \phi_i, \Delta \phi_j \rangle.$
+This can be written as $\mathbf{c'Kc},$ here $\mathbf{K}_{ij} = \langle \Delta \phi_i, \Delta \phi_j \rangle.$
 
 \smallskip
 
-We define the matrix $\mathbf{\Phi}$ as before with $\mathbf{\Phi}_{ij} = \phi_j(\mathbf{x}_i)$, $\mathbf{c} = (c_1, \dots, c_m)$. We can then write the penalty in terms of the coefficients
+We define the matrix $\mathbf{\Phi}$ as before with $\mathbf{\Phi}_{ij} = \phi_j(\mathbf{x}_i)$, and let $\mathbf{c} = (c_1, \dots, c_m)$. We can then write the penalty in terms of the coefficients
 
 \[
 	PENSSE(c) = (\mathbf{y - \Phi c})'(\mathbf{y - \Phi c}) + \lambda \mathbf{c'Kc}.
 \]
-\qedsymbol
+\qedbox
 \end{example}
 
 
