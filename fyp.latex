@@ -1,4 +1,4 @@
-\documentclass[10pt, a4paper]{article}
+\documentclass[12pt, a4paper]{article}
 
 \usepackage{amsmath}
 \usepackage{amsfonts}
@@ -19,7 +19,7 @@
 \theoremstyle{remark}
 \newtheorem*{remark}{Remark}
 
-\title{Representing Penalties on Basis Expansions as a Polynomial In the Parameters (Working Title)}
+\title{Representing Differntial Equation Penalties on Basis Expansions as a Polynomial In the Parameters}
 
 \begin{document}
 \maketitle
@@ -310,25 +310,45 @@ We define the matrix $\mathbf{\Phi}$ as before with $\mathbf{\Phi}_{ij} = \phi_j
 
 \section{Non Linear Penalties}
 
-Here we discuss generalisations of the roughess penalty to penaltys on nonlinear operators applied to the function. The problem is finding nice expressions for penalies of the form $\int_D |Tf(t)|^2 \mathrm{d}t$, where $T$ is not necessarily a linear operator anymore. Continuing with the case where we are working on the span of a finite set of basis functions, so an arbitary function $f$ can be written as $f(t) = \mathbf{c'\phi}(t)$, it will be shown how in some cases that the penalty can be written in the form $\mathbf{F(c)'KF(c)}$ where $F(c)$ is a vector valued function of our parameter vector $\mathbf{c}.$ In all the cases we have seen so far $\mathbf{F(\cdot)}$ was simply the identity function $\mathbf{F(c)} = \mathbf{c}.$ In the nonlinear case things can get more interesting as expected.
+It is convienient to represent a penalty in the form $\mathbf{F(c)'KF(c)},$ where all the terms retain their usual meaning, except we have replaced the term $\mathbf{c}$ with a vector valued function $\mathbf{F(c)}.$ It is easy to find an expression for the gradient of this function, for any two sufficiently smooth vector fields $\mathbf{F}$ and $\mathbf{G}, \nabla(\mathbf{F'G}) = \mathbf{J_{F}G} + \mathbf{J_{G}F}.$ $\mathbf{J_{F}}$ is the Jacobian of the vector field $\mathbf{F}.$Letting $\mathbf{F} =\mathbf{F(c)}$ and $\mathbf{G} = \mathbf{KF(c)}$
+
+\[
+	\nabla(\mathbf{F'KF}) = \mathbf{J_{F}KG} + \mathbf{KJ_{G}F}.
+\]
+
+Where we have used the linearity of the Jacobian operator. 
 
 \smallskip
 
-The trick is that if our function is of the form $f = \sum c_i\phi_i$ then some nonlinear operators will return something of the form $\sum b_i(\mathbf{c}) \psi_i$ for some other functions $\{\psi_i\}$. The coefficients $b_i$ depend on the original coefficients $c_i,$ reflecting the fact the our function is uniquely defined by and represented by its coefficients.  Since the nonlinear operator $T$ has the property that it maps from one vector space to another, the span of the $\phi_i$ functions to the span of the $\psi_i$ functions. The nonlinearity is reflected in the fact the coefficients in front of the $\psi_i$ depend nonlinearly on the coefficients of the $\phi_i$ functions.
+It will often occur that the function $\mathbf{F(c)}$ depends exclusively on the number of coefficients and not the choice of basis. The Jacobian can be precomputed in advance once we have decided on the number of basis functions. The matrix $\mathbf{K}$ typically depends on our choice of basis as well as the number of basis functions used. 
+
+The function $\mathbf{F(c)}$ is also typically well conditioned, i.e  of ``normal'' size relative to the size of its coefficients. The conditioningof the problem will hinge on $\mathbf{K},$ by examining it we can get insight into whether a choice of basis will perform well for the problem at hand. 
+
+\begin{example}(The Eikonal Equation) The second order nonlinear ODE $y''= y^2$ on the interval $[0,1]$ will be used as an example. We will use a basis consisting of the two monomials $\{1,t,t\}.$ This small basis would not be used for practical problems, but is ideal for an example. The goal is to find an expression for the penalty term $\int_0^1 \{y''(t) - [y(t)]^2\}^2\mathrm{d}t$ under the assumption that $y(t) = a + bt + ct^2,$ a linear combination of our basis functions. This penalty can be interpreted as a norm composed with an operator $\|Ty\|^2 = \|y'' - y^2\|^2 = \langle y'' - y^2, y'' - y^2 \rangle.$ The norm in this case is induced by the inner product $\langle f,g\rangle = \int_0^1 f(t)g(t)\mathrm{d}t.$ 
+
+\smallskip
+
+For this choice of basis $y'' - y^2 = (a+bt+ct^2 )'' - (a+bt+ct^2)^2 = 2c - (a^2 + b^2t^2 + c^2t^4 + 2abt + 2bct^3 + 2act^2) = 2c - a^2 -2abt - (b^2 + 2ac)t^2 - 2bct^3 - c^2t^4.$ The operator maps the space spanned by the basis functions $\{1,t,t^2\}$ into the space spanned by the functions $\{1,t,t^2,t^3,t^4\}.$ All that is left to do is to find an expression for $\|c_0 + c_1t + c_2t^2 + c_3t^3 + c_4t^4\|^2,$ the coefficients $\{c_k\}$ have already been found.  An expression for this norm has aleady been found. It is given by $\mathbf{c'K'c},$ where $\mathbf{c} = (c_0, \dots, c_5)$ and $\mathbf{K}$ is a $5\times5$ matrix with $\mathbf{K}_{ij} = \langle t^i, t^j \rangle = \int_0^1 t^{i+j}\mathrm{d} = 1 /(i + j + 1).$ Writing $\mathbf{c}$ as $(2c - a^2, -2ab, -b^2 - 2ac, -2bc, -c^2)$ we get the result above.
+
+Contrast the matrix $\mathbf{K}$ with the $5 \times 5$ Hilbert matrix $\mathbf{H}$, defined by $\mathbf{H}_{ij} = 1 / (i + j - 1).$ This matrix is known to be ill-conditioned, which suggests that a polynomial basis will be less than ideal for this problem. 
+
+
+It is not hard to generalise the results to an arbitary polynomial basis, so instead we will examine a general basis. The trick is that if our function is of the form $f = \sum c_i\phi_i$ then some nonlinear operators will return something of the form $\sum b_i(\mathbf{c}) \psi_i$ for some other functions $\{\psi_i\}$. The coefficients $b_i$ depend on the original coefficients $c_i,$ reflecting the fact the our function is uniquely defined by and represented by its coefficients.  Since the nonlinear operator $T$ has the property that it maps from one vector space to another, the span of the $\phi_i$ functions to the span of the $\psi_i$ functions. The nonlinearity is reflected in the fact the coefficients in front of the $\psi_i$ depend nonlinearly on the coefficients of the $\phi_i$ functions.
 
 \smallskip 
 
-Since the image (or range) of the span of the $\phi_i$ under $T$ is a vector subspace of the inner product space $\mathit{L}^2[D]$ it inherits the inner product of its parent. This is the property that we will use, it is easy to find an expression for the inner product on a finite vector space, it will always be something of the form $\mathbf{b'Ab}.$ Since the coefficients of the $\psi_i$ depend of the coefficients of the $\phi$ this can be written as $\mathbf{F(c)'AF(c)}.$ The matrix $A$ is generally easy to find, it is identical to the ideas we used before.
+Since the image (or range) of the span of the $\phi_i$ under $T$ is a vector subspace of the inner product space $\mathit{L}^2[D]$ it inherits the inner product of that space. It is easy to find an expression for the inner product on a finite vector space, it will always be something of the form $\mathbf{b'Ab}.$ Since the coefficients of the $\psi_i$ depend of the coefficients of the $\phi$ this can be written as $\mathbf{F(c)'AF(c)}.$ The matrix $A$ is generally easy to find, it is identical to the ideas we used before.
 
 \smallskip
 
 Finding the matrix $\mathbf{A}$ is easy it depends only on the $\psi_i$ and can be written in the form $\mathbf{A}_{ij} = \langle \psi_i, \psi_j \rangle$. The new basis $\{\psi_i\}$ is self evident in many cases. The hard part is finding the coefficients, or equivalently the function $\mathbf{F(c)}.$
 
-\begin{example}($f'' = f^2$) This example is purely artificial and intended to illustrate how the expresssion for the penalty term can be derived; it is a simple nonlinear ODE that is amenable to this technique. In this case our penalty is 
+We will do the above example again for a general basis, where $y = c_1\phi_i + \dots + c_k\phi_k.$ We desire to calculate the penalty
 \[
 	\int_\mathit{D} (f''(t) - f(t)^2)^2\mathrm{dt}.
 \]
 
+The first step is to find an expression for the terms inside the penalties
 \[
 	f''(t) = \sum_{i=0}^mc_i\phi_i(t)''
 \]
@@ -343,7 +363,7 @@ Hence,
 	f''(t) - f(t)^2 = \sum_{i=0}^mc_i\phi(t)'' - \sum_{i=0}^m\sum_{j=0}^mc_ic_j\phi_i(t)\phi_j(t).
 \]
 
-Notice the second term is a two dimensional, finite sum. We now need to find norm. As before we can write this as an inner product: $\langle f'' - f^2, f'' - f^2 \rangle$. The above expression is in the form $a_1\phi_1'' + \dots + a_m\phi_m'' +  b_{11}\phi_1\phi_1 + \dots b_{mm}\phi_m\phi_m$, so we can represent it as $\mathbf{F(c)'AF(c)}$. The form above is a little awkward to work with. We would like to have it vary with one index only, or combine the $\phi_i''$ and the $\phi_i\phi_j$ together. We would define a function $\pi(n)$ that returns the appropriate function either some $\phi_i$ or $\phi_i\phi_j$ depending on the value. Defining such a function is tricky however. One function is as follows
+Notice the second term is a two dimensional, finite sum. We now need to find its norm. As before we can write this as an inner product: $\langle f'' - f^2, f'' - f^2 \rangle$. The above expression is in the form $a_1\phi_1'' + \dots + a_m\phi_m'' +  b_{11}\phi_1\phi_1 + \dots b_{mm}\phi_m\phi_m$, so we can represent it as $\mathbf{F(c)'AF(c)}$. The form above is a little awkward to work with. We would like to have it vary with one index only, or combine the $\phi_i''$ and the $\phi_i\phi_j$ together. We would define a function $\pi(n)$ that returns the appropriate function either some $\phi_i$ or $\phi_i\phi_j$ depending on the value. Defining such a function is tricky however. One function is as follows
 
 \[
 	\pi(k) = \begin{cases}
