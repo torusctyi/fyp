@@ -722,6 +722,36 @@ If we have an operator $T$ has this property, then it is trivial to see that $\a
 	If we had two functions $x$ and $y$ in $\mathit{L}^2(\mathit{D}),$ then the m $xy^2$ would be $3$-linear.
 \end{example}
 
+\section{Conservation Laws And Differential Equations}
 
+Differential equations can have the effect of constraining solutions geometrically. This allows the formulation of statistical models that can be use to estimate the parameters of the differential equation.
+
+\begin{example}(Simple Harmonic Motion) Simple Harmonic Motion is the linear ordinary differential equation $y'' = -\omega^2y.$ All of its trajectories are constrained to lie on an ellipse depending on the parameters.
+
+\begin{align*}
+	y'' &= -\omega^2 y \\
+       y'y''&= -\omega^2 y'y \\
+       (\frac{(y')^2}{2}) &= (\frac{-\omega^2y^2}{2})' \\ 
+		   (y')^2 &= -\omega^2y + C  \\
+	(y')^2 + \omega^2y^2 &= C.
+\end{align*}
+
+We can see that values of a function and its derivatives are constrained by the result above. This is a expression in $(y')^2$ and $y^2$ and so we might be able to estimate $\omega^2$ and $C$ using least squares. Since $\omega \geq 0$ by assumption, this allows us to estimate $\omega$ too. Thederivative terms $y'$ can be estimated using techniques from functional data analysis.
+\end{example}
+\begin{example}(Lotka Volterra Equations) The Lotka Volterra Equations model predator prey relationships. The equations are 
+
+\begin{align*}
+	x' &= \alpha x + \beta xy \\
+	y' &= \gamma y + \delta xy.
+\end{align*}
+
+We can find a quantity $V$ that is conserved for all solutions,
+
+\[
+	V = -\delta x - \gamma \log{x}  + \beta y + \alpha \log{y}
+\]
+
+This is a linear model in the observations. The standard statistics used in linear regression such as the F-test are not necessarily valid however. If we were to assume for example that the errors in the observed values $x\star$ and $y\star$ had the usual normal distribution and i.i.d, then the nonlinear equation would alter their distribution, so the errors in the ``linear'' model above would not have our usual error structure.
+\end{example}
 \end{document}
 
