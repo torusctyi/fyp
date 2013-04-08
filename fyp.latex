@@ -130,7 +130,7 @@ The above expression is can be expressed more cleanly using vector notation. Fir
 	\hat{\mathbf{c}} = \underset{\mathbf{c} \in \mathbb{R}^m}{\operatorname{argmin}} (\mathbf{y - \Phi c})'(\mathbf{y - \Phi c}).
 \]
 
-The expression on the right hand side is an example of a quadratic form, they are the generalisation of quadratic functions to finite dimensional vector spaces. We can have quadratic forms on infinite dimensional vectors spaces too, but that is not relevant here.
+The expression on the right hand side is an example of a quadratic form, they are the generalisation of quadratic functions to finite dimensional vector spaces. . Some of the quadratic forms we will encounter will be formally defined on infinite dimensional function spaces, but they will be restricted to finite dimensional subspaces. In effect we will only deal with quadratic forms on finite dimensional spaces. 
 
 The advantage of quadratic forms is that they are very easy to minimise, one can use the normal equation, or compute the gradient and use an algorithm (or class of algorithms) such as conjugate gradient, quasi Newton methods or the Levenberg-Marquardt method.
 \section{Roughness Penalties}
