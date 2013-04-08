@@ -37,15 +37,15 @@ Fitting sophisticated mathematical functions to empirical data continues to be a
 
 \smallskip
 
-Here, $\mathbb{E}[y|t]$ is the conditional expectation of the dependent variable $y$, given our independent data $x$. The conditional expectation $\mathbb{E}[y|t]$ is the choice of $y$ depending exclusively on $t$ that minimises the squared loss $\mathbb{E}[y(t) - E[y|t]]^2$. This is a theoretical optimiser, and so in practice we must make do with an estimate $\widehat{\mathbb{E}[y|t]}$ instead, using our basis functions $\{\phi_k\}$
+Here, $\mathbb{E}[y|t]$ is the conditional expectation of the dependent variable $y$, given our independent data $x$. The conditional expectation $\mathbb{E}[y|t]$ is the choice of $y$ depending exclusively on $t$ that minimises the squared loss $\mathbb{E}[y(t) - E[y|t]]^2$. This is a theoretical optimiser, and so in practice we must make do with an estimate $\widehat{\mathbb{E}[y|t]}$ instead, using our basis functions $\{\phi_k\}.$
 
-\begin{example}(Simple Linear Regression) Simple linear regression is an example of a statistical procedure that uses a basis function representation. Take two basis functions $\{1, t\}$, so that $\hat{y}(t)$, our estimate of $y$ given the value $t$, can be written as a linear combination of the two $\widehat{\mathbb{E}[y|t]} = \hat{y}(t) = c_0 + c_1t.$ This is the form of a simple linear regression model. If our basis consists of just the single constant function $\phi(t) = 1$ then we get a model of the form $\hat{y} = c_0.$ In this case we would generally use the mean of the $y$ values as our estimate of $c_0$. If we go in the other direction and add a quadratic function $t^2$ we get a quadratic regression model $\hat{y}(t) = c_0 + c_1t + c_2t^2.$
+\begin{example}(Simple Linear Regression) Simple linear regression is an example of a statistical procedure that uses a basis function representation. Take two basis functions $\{1, t\}$, so that $\hat{y}(t)$, our estimate of $y$ given the value $t$, can be written as a linear combination of the two $\widehat{\mathbb{E}[y|t]} = \hat{y}(t) = c_0 + c_1t.$ This is the form of a simple linear regression model. If our basis consists of just the single constant function $\phi(t) = 1$ then we get a model of the form $\hat{y} = c_0.$ In this case we would generally use the mean of the $y$ values as our estimate of $c_0$. Alternatively, if we expand this model by adding a quadratic term $t^2$ to our basis, we get a quadratic regression model $\hat{y}(t) = c_0 + c_1t + c_2t^2.$
 
 \qedbox
 
 \end{example}
 
-\begin{example}(Broken Stick Function)  Another choice of basis is the two functions $\{\phi_1, \phi_2\}$ defined as follows
+\begin{example}(Ramp Function)  Another choice of basis is the two functions $\{\phi_1, \phi_2\}$ defined as follows
 
 \begin{align*}
 	\phi_1(t) &= 1 \\
@@ -61,7 +61,7 @@ Here, $\mathbb{E}[y|t]$ is the conditional expectation of the dependent variable
 \begin{figure}[t]
 	\centering
 	\includegraphics[scale = 0.5]{ramp_function.pdf}
-	\caption{The broken stick function  $\phi_2.$}
+	\caption{The ramp function function  $\phi_2.$}
 	\label{fig:ramp_function}
 \end{figure}
 
@@ -81,7 +81,7 @@ The above basis has two disadvantages though. Firstly the second basis function 
 
 \end{example}
 
-This underscores an important point. There are many types of basis besides the ones usually encountered, such as polynomial bases. Many of them are fungible from the pure mathematical point of view in terms of how well they can fit a function. The statistician should make a sensible choice of basis. If our choice of basis is good, then it will be able to fit the data with only a few terms, and we might be able to avoid estimating many coefficients. This is one of the reasons why simple linear regression and quadratic regression are useful; they can capture much variation in the observed data in spite of being very simple.
+This underscores an important point. There are many types of basis besides the ones usually encountered, such as polynomial bases. Many of them are fungible from the pure mathematical point of view in terms of how well they can fit a function; they will all eventually converge given enough basis functions. The statistician should make a sensible choice of basis. If our choice of basis is appropriate, it will be able to fit the data to a high degree of accuracy with only a few terms, and we might be able to avoid estimating many coefficients. This is one of the reasons why simple linear regression and quadratic regression are useful; they can capture much variation in the observed data in spite of being very simple.
 
 \begin{example}(Fourier Basis Functions)
 If our data has a periodic component to it, such as the observed temperature over the course of the year, or a time series of annual sales, then it seems intuitively correct to use a basis consisting of periodic functions. This suggests that we should use a Fourier basis consisting of the set of functions $\{\cos(n\omega t), \sin(n\omega t)\}$ where $0 \leq n \leq N$ for some $N$ and $\omega$ is the frequency. The frequency depends on our time scale, they are related by the formula $\omega = 2\pi/T$, where $T$ is the period. 
@@ -114,7 +114,7 @@ Least squares fitting is a means of fitting a function to data. The least square
 	\hat{y}_{LS}(t) = \underset{f \in \mathit{S}}{\operatorname{argmin}}\sum_{i = 1}^n [y_i - f(t_i)]^2.
 \]
 
-\par\noindent From now on we will always be working with the sums of the squared errors, so we will not bother using any subscripts to indicate this and only use $\hat{y}(t)$ rather than $\hat{y}_{LS}(t).$
+\par\noindent From now on we will always be working with the sums of the squared errors, so we will not burden ourselves by  using any subscripts to indicate this and only use $\hat{y}(t)$ rather than $\hat{y}_{LS}(t).$
 
 \smallskip
 
@@ -132,7 +132,7 @@ The above expression is can be expressed more cleanly using vector notation. Fir
 
 The expression on the right hand side is an example of a quadratic form, they are the generalisation of quadratic functions to finite dimensional vector spaces. We can have quadratic forms on infinite dimensional vectors spaces too, but that is not relevant here.
 
-The advantage of quadratic forms is that they are very easy to minimise, one can use the normal equation, or compute the gradient and use an algorithim (or class of algorithms) such as conjugate gradient, quasi Newton methods or the Levenberg-Marquardt method.
+The advantage of quadratic forms is that they are very easy to minimise, one can use the normal equation, or compute the gradient and use an algorithm (or class of algorithms) such as conjugate gradient, quasi Newton methods or the Levenberg-Marquardt method.
 \section{Roughness Penalties}
 
 If we assume that at a given time $t$ that, $\mathbf{y}(t) = \mathbf{\Phi}(t)\mathbf{c} + \mathbf{e(t)}$ where the elements of $\mathbf{e}$ are i.i.d. and have well defined second moments, thee least squares gives us the best linear unbiased estimator (BLUE) of $\mathbf{y},$ the function we assume to be generating the data. Nonetheless it is often useful to employ a form of regularisation which constrains how much $\hat{y}$ is allowed to vary. Intuitively, this reduces the variation of $\hat{y}$ and helps guard against overfitting. In the context of basis function expansions, the most commonly used penalty is the curvature penalty
@@ -158,7 +158,7 @@ The penalty can also be represented as a polynomial. Let $\langle f,g \rangle = 
 				 &= \mathbf{c'Kc}, \text{where $\mathbf{c} = (c_1, \dots, c_m)$ is a vector} 
 \end{align*}
 
-Here, $\langle \phi_i'', \phi_j'' \rangle$ depends only on our choice of basis, since this generally doesn't change in the middle of an analysis, we can treat these terms as ``fixed'' for our purposes. In the last line the penalty term was represented as a quadratic form by defining an $m \times m$ matrix $\mathbf{K}$ by $\mathbf{K}_{ij} = \langle \phi_i'', \phi_j'' \rangle$ it can be seen that $\langle f'', f'' \rangle = \mathbf{c'Kc}$.  
+Here, $\langle \phi_i'', \phi_j'' \rangle$ depends only on our choice of basis, since this generally does not change in the middle of an analysis, we can treat these terms as ``fixed'' for our purposes. In the last line the penalty term was represented as a quadratic form by defining an $m \times m$ matrix $\mathbf{K}$ by $\mathbf{K}_{ij} = \langle \phi_i'', \phi_j'' \rangle$ it can be seen that $\langle f'', f'' \rangle = \mathbf{c'Kc}$.  
 
 \smallskip
 
@@ -171,7 +171,7 @@ When fitting curves to data, there are two distinct, but competing objectives. W
 
 \smallskip
 
-The solution is to use a penalty that incorporates both of these objectives, the penalised sum of squared errors. The penalised sum of squared errors is a functional, or a function whose domain is a set of functions and whose codomain is the real numbers. Here it is a functional on the spanning set of our basis functions $\{\phi_i(t)\}.$ It is the weighted sum of the roughness and least squares penalties
+The solution is to use an objective function  that incorporates both of these objectives, the penalised sum of squared errors. The penalised sum of squared errors is a functional, or a function whose domain is a set of functions and whose codomain is the real numbers. Here it is a functional on the spanning set of our basis functions $\{\phi_i(t)\}.$ It is the weighted sum of the roughness and least squares penalties
 
 \[
 \mathrm{PENSSE}(f) = \sum_{i = 0}^n [y_i - f(t_i)]^2 + \lambda \int_\mathit{D} [f''(t)]^2\mathrm{d}t.
