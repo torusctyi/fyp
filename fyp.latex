@@ -5,8 +5,10 @@
 \usepackage{vmargin}
 \usepackage{amsthm}
 \usepackage{graphicx}
+\usepackage{natbib}
 
 \newcommand{\qedbox}{\hspace{\fill} \qedsymbol}
+
 \theoremstyle{theorem}
 \newtheorem{theorem}{Theorem}
 \newtheorem{corollary}{Corollary}
@@ -19,7 +21,7 @@
 \theoremstyle{remark}
 \newtheorem*{remark}{Remark}
 
-\title{Representing Differntial Equation Penalties on Basis Expansions as a Polynomial In the Parameters}
+\title{Representing Differential Equation Penalties on Basis Expansions as a Polynomial In the Parameters}
 
 \begin{document}
 \maketitle
@@ -214,7 +216,7 @@ If this problem is looked at from the perspective of linear models, as in Christ
 
 We have $\mathbf{\hat{c}} = \mathbf{M(\Phi c + e)},$ so $\mathbb{E}[\mathbf{\hat{c}}] = \mathbf{H\Phi c}.$ The variance of $\mathbf{\hat{c}}$ is given by $\mathrm{Var}[\mathbf{\hat{c}}] = \sigma^2\mathbf{M\Phi\Phi' M'}.$ Hence the expected value of $\mathbf{\hat{y}}$ is $\mathbf{\Phi My}$ and its variance is $\sigma^2 \mathbf{\Phi M\Phi\Phi' M'\Phi'}$.
 
-Under the standard theory of linear models, the least squares estimate $\mathbf{M}(0)\mathbf{y}$ is the BLUE of $\mathbf{c}.$ The contrapostive of this is that any linear estimater, including those of the form $\mathbf{M}(\lambda)\mathbf{y}$, can only achieve better reduction in variance by incurring bias. Any unbiased linear estimtor or a linear biased estimator with higher variance than the least squares estimator will have a higher mean error than the least square estimator, and is not worth paying attention to. The only class of linear estimators that can hope to do better than the least squares estimator are those that incur some bias in the hopes of achieving a sufficient reduction in variance to reduce the total mean square error against the least squares estimator. The estimator $\mathbf{M}(\lambda)$ should belong to the category, or there is no point in using it, so it is biased by design.
+Under the standard theory of linear models, the least squares estimate $\mathbf{M}(0)\mathbf{y}$ is the BLUE of $\mathbf{c}.$ The contrapositive of this is that any linear estimator, including those of the form $\mathbf{M}(\lambda)\mathbf{y}$, can only achieve better reduction in variance by incurring bias. Any unbiased linear estimator or a linear biased estimator with higher variance than the least squares estimator will have a higher mean error than the least square estimator, and is not worth paying attention to. The only class of linear estimators that can hope to do better than the least squares estimator are those that incur some bias in the hopes of achieving a sufficient reduction in variance to reduce the total mean square error against the least squares estimator. The estimator $\mathbf{M}(\lambda)$ should belong to the category, or there is no point in using it, so it is biased by design.
 
 \section{Multivariate Bases}
 
@@ -236,6 +238,38 @@ Notice that even though we are working in more than one dimension, our sum is st
 Finding a least squares estimate is identical, so we will not cover it here.
 
 \newpage
+
+\begin{example}(Thin Plate Splines) Suppose we wish to generalise the roughness penalty on the one dimensional derivative to two dimensions. One such functional is a penalty on the second order partial derivatives
+
+\[
+	J(f) = \int_{\mathbb{R}^2} [(f_{xx})^2 + 2(f_{xy})^2 + (f_{yy})^2]\mathrm{d}x\mathrm{d}y.
+\]
+
+We are using subscript notation for the partial derivatives, so $f_{xx}$ denotes $\partial^2f /\partial x^2$ and so on. This penalty has a number of desirable properties. In the one dimensional case, if $\int (f'')^2 \mathrm{d}t = 0$ then $f$ is a straight line, likewise if $J(f) = 0$ then the function $f$ must be a plane. This penalty is invariant with respect to rotation and translation in coordinates, it does not matter where we place our origin or how the orientation of the axes is chosen.
+
+Assume as usual that $f$ lies in the span of some set of basis functions so that $f = c_1\phi_1 + \dots + c_m\phi_m.$ By finding a bilinear functional that induces the roughness penalty above, we can derive a compact expression for the penalty in terms of the coefficients. Define a functional $B(\cdot, \cdot)$ by $B(f,g) = \int_{\mathbb{R}^2} [f_{xx}g_{xx} + 2f_{xy}g_{xy} + f_{yy}g_{yy}]\mathrm{d}x\mathrm{d}x.$ Note that $J(f) = B(f,f),$ so $J(\cdot)$ is a quadratic form. Let $\mathbf{c} = (c_1, \dots, c_m)$ then 
+
+\begin{align*}
+	J(f) &= B(f,f) \\ 
+	     &= B(c_1\phi_1 + \dots + c_m\phi_m, c_1\phi_1 + \dots + c_m\phi_m) \\  
+	     &= c_1c_1B(\phi_1, \phi_1) + \dots c_1c_mB(\phi_1, \phi_m) + \dots + c_mc_mB(\phi_m, \phi_m) \\ 
+	     &= \mathbf{c'Rc},
+\end{align*}
+
+where the penalty matrix $\mathbf{R}$ is defined by $\mathbf{R}_{ij} = B(\phi_{i}, \phi_{j}).$ 
+
+
+The derivation of an expression for this roughness penalty follows the same pattern as the derivation of the roughness penalty in one dimension because in both cases the penalty is a quadratic form, that is can be written in the form $a(f,f),$ where $a(\cdot, \cdot)$ is bilinear. 
+
+A further benefit representing the roughness penalty using a bilinear form is that is that it generalises easily to an arbitrary number of dimensions. It is possible to define a general roughness penalty on $n$ coordinates $(x_1, \dots, x_n$) by using an appropriate bilinear form
+
+\[
+	B_n(f,g) = \int_{\mathbb{R}^2} \sum_{i = 1}^n\sum_{j=1}^n f_{x_{i}x_{j}}g_{x_{i}x_{j}} \mathrm{d}x_1 \dots \mathrm{d}x_n,
+\]
+
+and letting $J_n(f) = B_n(f,f).$ Under the assumption that $f$ can be represented as a basis $c_1\phi_1 + \dots + c_m\phi_m$ the derivation above can be generalised to data depending on three or more dimensions. It is identical except $B(\cdot, \cdot)$ is replaced with $B_n(\cdot, \cdot).$
+
+\end{example}
 
 \begin{example}(Fitting the Displacement of a Membrane Using a Laplacian Penalty) Suppose we had measurements of protrusion of a plate or membrane and we wished to fit some functions to it. We would assume the surface is not moving, as would be the case for clingfilm over a bowl for example.  We could use standard interpolation or least squares methods. However the mechanics of these objects are often governed by Partial Differential Equations (PDEs). We would like to incorporate this information somehow. 
 	
@@ -270,7 +304,7 @@ As usual we use $\hat{u}(x,y)$ to denote the function that minimises the penalty
 
 \smallskip
 
-The interpretation of the penalty in this case is a little more subtle than before. Harmonic functions, as solutions to Laplace's equation are called, are not flat as if they were linear, though linear functions are clearly harmonic. In two dimensions, compare the laplancian penalty to the curvature penalty that also generalises the one dimensional roughness penalty $\int_{\mathit{D}}[(u_{xx})^2 + (u_{xy})^2 + (u_{yy})^2]\mathrm{d}x\mathrm{d}y.$ This penalty attempts to constrain all second order derivatives to zero. There are many harmonic functions which can vary over their domain, e.g $f(x,y) = e^x\sin(y).$ The laplacian penalty has more ``give'' than such penalties on functions, so we should not expect it to necessarily encourage the fitted surface to approach a plane as $\lambda$ increases. 
+The interpretation of the penalty in this case is a little more subtle than before. Harmonic functions, as solutions to Laplace's equation are called, are not flat as if they were linear, though linear functions are clearly harmonic. In two dimensions, compare the Laplacian penalty to the curvature penalty that also generalises the one dimensional roughness penalty $\int_{\mathit{D}}[(u_{xx})^2 + (u_{xy})^2 + (u_{yy})^2]\mathrm{d}x\mathrm{d}y.$ This penalty attempts to constrain all second order derivatives to zero. There are many harmonic functions which can vary over their domain, e.g $f(x,y) = e^x\sin(y).$ The Laplacian penalty has more ``give'' than such penalties on functions, so we should not expect it to necessarily encourage the fitted surface to approach a plane as $\lambda$ increases. 
 
  Generally $\lambda$ would be chosen by a cross-validation approach as was the case for the roughness penalty. It is interesting to speculate about the implications of the order of magnitude of $\lambda$ that optimises the cross-validation score. It could be thought of as a proxy for the validity of Laplace's equation. Intuitively the higher $\lambda$ is the more the Laplacian penalty is emphasised, and so the more likely the model is to be valid. 
 
@@ -736,8 +770,9 @@ Differential equations can have the effect of constraining solutions geometrical
 	(y')^2 + \omega^2y^2 &= C.
 \end{align*}
 
-We can see that values of a function and its derivatives are constrained by the result above. This is a expression in $(y')^2$ and $y^2$ and so we might be able to estimate $\omega^2$ and $C$ using least squares. Since $\omega \geq 0$ by assumption, this allows us to estimate $\omega$ too. Thederivative terms $y'$ can be estimated using techniques from functional data analysis.
+We can see that values of a function and its derivatives are constrained by the result above. This is a expression in $(y')^2$ and $y^2$ and so we might be able to estimate $\omega^2$ and $C$ using least squares. Since $\omega \geq 0$ by assumption, this allows us to estimate $\omega$ too. The derivative terms $y'$ can be estimated using techniques from functional data analysis.
 \end{example}
+
 \begin{example}(Lotka Volterra Equations) The Lotka Volterra Equations model predator prey relationships. The equations are 
 
 \begin{align*}
@@ -752,6 +787,8 @@ We can find a quantity $V$ that is conserved for all solutions,
 \]
 
 This is a linear model in the observations. The standard statistics used in linear regression such as the F-test are not necessarily valid however. If we were to assume for example that the errors in the observed values $x\star$ and $y\star$ had the usual normal distribution and i.i.d, then the nonlinear equation would alter their distribution, so the errors in the ``linear'' model above would not have our usual error structure.
+
 \end{example}
+
 \end{document}
 
