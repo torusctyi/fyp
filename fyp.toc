@@ -1,0 +1,12 @@
+\contentsline {section}{\numberline {1}Basis Function Expansion Methods}{2}
+\contentsline {section}{\numberline {2}Least Squares Fitting}{4}
+\contentsline {section}{\numberline {3}Roughness Penalties}{5}
+\contentsline {section}{\numberline {4}Penalised Least Squares}{6}
+\contentsline {section}{\numberline {5}Multivariate Bases}{8}
+\contentsline {section}{\numberline {6}Non Linear Penalties}{11}
+\contentsline {section}{\numberline {7}Systems Of Ordinary Differential Equations (ODES)}{14}
+\contentsline {section}{\numberline {8}Burger's Equation}{17}
+\contentsline {section}{\numberline {9}Fisher's Equation}{17}
+\contentsline {section}{\numberline {10}Tidal Bore Equations}{18}
+\contentsline {section}{\numberline {11}Abstract Theory}{19}
+\contentsline {section}{\numberline {12}Conservation Laws And Differential Equations}{21}

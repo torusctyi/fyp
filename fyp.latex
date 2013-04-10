@@ -21,12 +21,16 @@
 \theoremstyle{remark}
 \newtheorem*{remark}{Remark}
 
+
 \title{Representing Differential Equation Penalties on Basis Expansions as a Polynomial In the Parameters}
 
 \begin{document}
 \maketitle
 
+\newpage
+\tableofcontents
 \section{Basis Function Expansion Methods}
+
 
 Fitting sophisticated mathematical functions to empirical data continues to be a challenge in statistical science. One approach, known as the basis function expansion method offers a considerable degree of flexibility and mathematically tractable solutions. This approach involves representing an unknown function $y(t)$ using a finite number of basis functions $\{\phi_k(t)\}$ through the conditional expectation
 
@@ -62,18 +66,18 @@ Here, $\mathbb{E}[y|t]$ is the conditional expectation of the dependent variable
 
 \begin{figure}[t]
 	\centering
-	\includegraphics[scale = 0.5]{ramp_function.pdf}
+	\includegraphics[width = 0.5pt, natwidth = 600pt , natheight = 600pt]{ramp_function.pdf}
 	\caption{The ramp function function  $\phi_2.$}
 	\label{fig:ramp_function}
 \end{figure}
 
 \smallskip
 
-This basis would work very well for representing data which starts to increase linearly past a certain threshold.  Broken stick functions and constant functions are very cheap computationally, only needing literally a line or two of code to implement and only have at most one associated parameter $(\tau)$, consuming little memory.  A computer can produce and work with comparatively a very large number of them at once. This could be used to cover situations where there data is unchanging over relatively long periods.
+This basis would work very well for representing data which starts to increase linearly past a certain threshold. Ramp functions and constant functions are very cheap computationally, only needing literally a line or two of code to implement and only have at most one associated parameter $(\tau)$, consuming little memory.  A computer can produce and work with comparatively a very large number of them at once. This could be used to cover situations where there data is unchanging over relatively long periods.
 
 \smallskip
 
-Ramp functions are the building blocks for the ``P-splines'' developed by Eiler and Marx. P-splines are a precursor to the penalty based approach used here. P-splines penalise the coefficients, whereas the focus here is to penalise the generated curve for some operator of it.
+Ramp functions are the building blocks for the ``P-splines'' developed by Eilers and Marx~\cite{Marx:Eilers:1996}. P-splines are a precursor to the penalty based approach used here.  P-splines penalise the coefficients, whereas the focus here is to penalise the generated curve for some operator of it ~\cite{Green:Silv:1994} ~\cite{Rupert:Carroll:Wand:2003}.
 
 \smallskip
 
@@ -105,12 +109,13 @@ A Fourier basis can represent  any square integrable function on some interval. 
 
 Since they are compact they generally can only individually capture local information about the data. One of the main advantages of B Splines is that they can represent any other spline of the same degree and smoothness with the same knots. This makes them useful for statistics since make they fewer assumptions about the form of the data than other families of splines. For example the so-called natural cubic splines require that the second derivative of the fitted spline curve be zero at the boundary of the domain on which it is supported. If this was not true of the processes generating the data, then this could be a source of bias.
 
+There are efficient algorithms for evaluating 
 $\square$
 \end{example}
 
 \section{Least Squares Fitting}
 
-Least squares fitting is a means of fitting a function to data. The least squares fit is the one that minimises the sums of the squared errors.  In the cases where we have $n$ observations $y_i$ measured at times $t_i$ and where we are selecting our estimated function $\hat{y}(t)$ from a set of functions $\mathit{S}$, the least squares fit $\hat{y}_{LS}(t)$ is defined as
+Least squares fitting is a means of fitting a function to data. The least squares fit is the one that minimises the sums of the squared errors ~\cite{Christensen:2012}.  In the cases where we have $n$ observations $y_i$ measured at times $t_i$ and where we are selecting our estimated function $\hat{y}(t)$ from a set of functions $\mathit{S}$, the least squares fit $\hat{y}_{LS}(t)$ is defined as
 
 \[
 	\hat{y}_{LS}(t) = \underset{f \in \mathit{S}}{\operatorname{argmin}}\sum_{i = 1}^n [y_i - f(t_i)]^2.
@@ -135,9 +140,10 @@ The above expression is can be expressed more cleanly using vector notation. Fir
 The expression on the right hand side is an example of a quadratic form, they are the generalisation of quadratic functions to finite dimensional vector spaces. . Some of the quadratic forms we will encounter will be formally defined on infinite dimensional function spaces, but they will be restricted to finite dimensional subspaces. In effect we will only deal with quadratic forms on finite dimensional spaces. 
 
 The advantage of quadratic forms is that they are very easy to minimise, one can use the normal equation, or compute the gradient and use an algorithm (or class of algorithms) such as conjugate gradient, quasi Newton methods or the Levenberg-Marquardt method.
+
 \section{Roughness Penalties}
 
-If we assume that at a given time $t$ that, $\mathbf{y}(t) = \mathbf{\Phi}(t)\mathbf{c} + \mathbf{e(t)}$ where the elements of $\mathbf{e}$ are i.i.d. and have well defined second moments, thee least squares gives us the best linear unbiased estimator (BLUE) of $\mathbf{y},$ the function we assume to be generating the data. Nonetheless it is often useful to employ a form of regularisation which constrains how much $\hat{y}$ is allowed to vary. Intuitively, this reduces the variation of $\hat{y}$ and helps guard against overfitting. In the context of basis function expansions, the most commonly used penalty is the curvature penalty
+Least squares tends to overfit the data as the basis is augmented, it will begin to fit error in data along with the actual quantity If the number of basis functions is greater than number of observations then the fitted can interpolate the points exactly. This is not desirable as the fit is also interpolating any statistical noise in our observations. By using a very large number of basis functions, but constraining them appropriately, we can enjoy the flexibility provided by a large basis without suffering from poor predictive accuracy.  One class of methods is to employ a form of regularisation which constrains how much $\hat{y}$ is allowed to vary. Intuitively, this reduces the variation of $\hat{y}$ and helps guard against overfitting. In the context of basis function expansions, the most commonly used penalty is the curvature penalty
 
 \[
 	\mathrm{PEN}(\hat{y}) = \int_\mathit{D}[\hat{y}''(t)]^2\mathrm{d}t.
@@ -147,7 +153,7 @@ If we assume that at a given time $t$ that, $\mathbf{y}(t) = \mathbf{\Phi}(t)\ma
 
 \smallskip
 
-This penalty tries to require $\hat{y}(t)$ to satisfy the differential equation $\hat{y}''(t) = 0$. The general solution of this ODE is of the form $\hat{y}(t) = \alpha + \beta t$, a straight line. The penalty has the effect of nudging $\hat{y}(t)$ towards linear regression.
+This penalty requires $\hat{y}(t)$ to satisfy the differential equation $\hat{y}''(t) = 0$. The general solution of this ODE is of the form $\hat{y}(t) = \alpha + \beta t$, a straight line. The penalty has the effect of nudging $\hat{y}(t)$ towards linear regression.
 
 \smallskip
 
@@ -164,7 +170,7 @@ Here, $\langle \phi_i'', \phi_j'' \rangle$ depends only on our choice of basis, 
 
 \smallskip
 
-The linearity property of the differentiation operator to expand out the inner product term, this technique is very useful for problems such as these.
+The expression $\langle f'', f'' \rangle$ a quadratic form induced by the bilinear function $\langle f'', g'' \rangle.$ The pattern of expanding out bilinear expressions seen above will be used again to simplify calculations. 
 
 
 \section{Penalised Least Squares}
@@ -180,7 +186,6 @@ The solution is to use an objective function  that incorporates both of these ob
 \]
 
 The parameter $\lambda$ controls the tradeoff between error and smoothness as represented by the least squares and roughness terms respectively. It can be thought of as a model complexity parameter; as $\lambda$ increases $\hat{y}(t)$ becomes more linear and so our model tends more towards simple linear regression, as it decreases the model tends more towards fitting the data exactly. 
-
 \smallskip
 
 In polynomial regression the analogous parameter would be the order of the polynomial we are fitting. However the two quantities differ in that the order of a polynomial is a discrete quantity, whilst $\lambda$ is a continuous one. 
@@ -201,7 +206,7 @@ Assume again that $\hat{y}(t)$ is the sum of basis functions, depending on a vec
 	\mathrm{PENSSE}(c) = (\mathbf{y - \Phi c})'(\mathbf{y - \Phi c}) + \lambda \mathbf{c}'\mathbf{Kc}.
 \]
 
-Where $\mathbf{y}$, $\mathbf{K}$ and $\mathbf{\Phi}$ have the same definitions as they did before. This is an regularised regression problem or Tikhonov regularisation. The problem of minimising this expression has the solution 
+Where $\mathbf{y}$, $\mathbf{K}$ and $\mathbf{\Phi}$ have the same definitions as they did before. These is an regularised regression methods are generally known as ridge regression ~\cite{Hoerl:1970}. The problem of minimising this expression has the solution 
 
 \begin{align*}
 	\mathbf{\hat{c}(\lambda)} &= \mathbf{(\Phi'\Phi + \lambda K)^{-1}\Phi'y} \\ 
@@ -212,11 +217,11 @@ Where we assume the inverse $\mathbf{M}(\lambda)$ exists.
 
 \smallskip
 
-If this problem is looked at from the perspective of linear models, as in Christessen, then $\mathbf{y} = \mathbf{\Phi c + e}$, where the elements of $\mathbf{e}$ are i.i.d and have mean zero and variance $\sigma^2$, then we can estimate the variance of $\hat{y}(t).$ We will denote the matrix $\mathbf{M}(\lambda)$ by $\mathbf{M}.$ The matrix $\mathbf{M}$ can be thought of as a sort of generalised projection matrix, since $\mathbf{M}(0)$ is the projection matrix on to the columns of $\mathbf{\Phi}.$
+If this problem is looked at from the perspective of linear models, as in Christessen ~\cite{Christessen:2011}, then $\mathbf{y} = \mathbf{\Phi c + e}$, where the elements of $\mathbf{e}$ are i.i.d and have mean zero and variance $\sigma^2$, then we can estimate the variance of $\hat{y}(t).$ We will denote the matrix $\mathbf{M}(\lambda)$ by $\mathbf{M}.$ The matrix $\mathbf{M}$ can be thought of as a sort of generalised projection matrix, since $\mathbf{M}(0)$ is the projection matrix on to the columns of $\mathbf{\Phi}.$
 
 We have $\mathbf{\hat{c}} = \mathbf{M(\Phi c + e)},$ so $\mathbb{E}[\mathbf{\hat{c}}] = \mathbf{H\Phi c}.$ The variance of $\mathbf{\hat{c}}$ is given by $\mathrm{Var}[\mathbf{\hat{c}}] = \sigma^2\mathbf{M\Phi\Phi' M'}.$ Hence the expected value of $\mathbf{\hat{y}}$ is $\mathbf{\Phi My}$ and its variance is $\sigma^2 \mathbf{\Phi M\Phi\Phi' M'\Phi'}$.
 
-Under the standard theory of linear models, the least squares estimate $\mathbf{M}(0)\mathbf{y}$ is the BLUE of $\mathbf{c}.$ The contrapositive of this is that any linear estimator, including those of the form $\mathbf{M}(\lambda)\mathbf{y}$, can only achieve better reduction in variance by incurring bias. Any unbiased linear estimator or a linear biased estimator with higher variance than the least squares estimator will have a higher mean error than the least square estimator, and is not worth paying attention to. The only class of linear estimators that can hope to do better than the least squares estimator are those that incur some bias in the hopes of achieving a sufficient reduction in variance to reduce the total mean square error against the least squares estimator. The estimator $\mathbf{M}(\lambda)$ should belong to the category, or there is no point in using it, so it is biased by design.
+Under the standard theory of linear models, the least squares estimate $\mathbf{M}(0)\mathbf{y}$ is the Best Linear Unbiased Estimator (BLUE) of $\mathbf{c}$ ~\cite{Christessen:2011}. The contrapositive of this is that any linear estimator, including those of the form $\mathbf{M}(\lambda)\mathbf{y}$, can only achieve better reduction in variance by incurring bias. Any unbiased linear estimator or a linear biased estimator with higher variance than the least squares estimator will have a higher mean error than the least square estimator, and is not worth paying attention to. The only class of linear estimators that can hope to do better than the least squares estimator are those that incur some bias in the hopes of achieving a sufficient reduction in variance to reduce the total mean square error against the least squares estimator. The estimator $\mathbf{M}(\lambda)$ should belong to the category, or there is no point in using it, so it is biased by design.
 
 \section{Multivariate Bases}
 
@@ -237,16 +242,13 @@ Notice that even though we are working in more than one dimension, our sum is st
 
 Finding a least squares estimate is identical, so we will not cover it here.
 
-\newpage
-
-\begin{example}(Thin Plate Splines) Suppose we wish to generalise the roughness penalty on the one dimensional derivative to two dimensions. One such functional is a penalty on the second order partial derivatives
+\begin{example}(Thin Plate Splines) Suppose we wish to generalise the roughness penalty on the one dimensional derivative to two dimensions. In their text , Green and Silverman advocate a penalty on the second order partial derivatives
 
 \[
 	J(f) = \int_{\mathbb{R}^2} [(f_{xx})^2 + 2(f_{xy})^2 + (f_{yy})^2]\mathrm{d}x\mathrm{d}y.
 \]
 
-We are using subscript notation for the partial derivatives, so $f_{xx}$ denotes $\partial^2f /\partial x^2$ and so on. This penalty has a number of desirable properties. In the one dimensional case, if $\int (f'')^2 \mathrm{d}t = 0$ then $f$ is a straight line, likewise if $J(f) = 0$ then the function $f$ must be a plane. This penalty is invariant with respect to rotation and translation in coordinates, it does not matter where we place our origin or how the orientation of the axes is chosen.
-
+We are using subscript notation for the partial derivatives, so $f_{xx}$ denotes $\partial^2f /\partial x^2$ and so on. This penalty has a number of desirable properties. In the one dimensional case, if $\int (f'')^2 \mathrm{d}t = 0$ then $f$ is a straight line, likewise if $J(f) = 0$ then the function $f$ must be a plane, the penalty is invariant with respect to rotation and translation in coordinates, it does not matter where we place our origin or how the orientation of the axes is chosen ~\cite{Green:Silv:1994}.
 Assume as usual that $f$ lies in the span of some set of basis functions so that $f = c_1\phi_1 + \dots + c_m\phi_m.$ By finding a bilinear functional that induces the roughness penalty above, we can derive a compact expression for the penalty in terms of the coefficients. Define a functional $B(\cdot, \cdot)$ by $B(f,g) = \int_{\mathbb{R}^2} [f_{xx}g_{xx} + 2f_{xy}g_{xy} + f_{yy}g_{yy}]\mathrm{d}x\mathrm{d}x.$ Note that $J(f) = B(f,f),$ so $J(\cdot)$ is a quadratic form. Let $\mathbf{c} = (c_1, \dots, c_m)$ then 
 
 \begin{align*}
@@ -304,7 +306,7 @@ As usual we use $\hat{u}(x,y)$ to denote the function that minimises the penalty
 
 \smallskip
 
-The interpretation of the penalty in this case is a little more subtle than before. Harmonic functions, as solutions to Laplace's equation are called, are not flat as if they were linear, though linear functions are clearly harmonic. In two dimensions, compare the Laplacian penalty to the curvature penalty that also generalises the one dimensional roughness penalty $\int_{\mathit{D}}[(u_{xx})^2 + (u_{xy})^2 + (u_{yy})^2]\mathrm{d}x\mathrm{d}y.$ This penalty attempts to constrain all second order derivatives to zero. There are many harmonic functions which can vary over their domain, e.g $f(x,y) = e^x\sin(y).$ The Laplacian penalty has more ``give'' than such penalties on functions, so we should not expect it to necessarily encourage the fitted surface to approach a plane as $\lambda$ increases. 
+
 
  Generally $\lambda$ would be chosen by a cross-validation approach as was the case for the roughness penalty. It is interesting to speculate about the implications of the order of magnitude of $\lambda$ that optimises the cross-validation score. It could be thought of as a proxy for the validity of Laplace's equation. Intuitively the higher $\lambda$ is the more the Laplacian penalty is emphasised, and so the more likely the model is to be valid. 
 
@@ -341,13 +343,31 @@ We define the matrix $\mathbf{\Phi}$ as before with $\mathbf{\Phi}_{ij} = \phi_j
 \qedbox
 \end{example}
 
+The Laplacian penalty has much in common with the roughness penalty used in thin plate splines. Both are invariant with respect to rotation for example and depend on the second order derivatives of the function. 
+
+\smallskip
+
+The difference is that the Laplacian penalty is weaker or less strict than the curvature roughness penalty. Every plane is clearly harmonic by definition, but there are harmonic functions that do not resemble planes at all when plotted, such as $f(x,y) = \cos(x)\sin(y)$ or $g(x,y) = \ln(x^2 + y^2).$ Furthermore, the Laplacian penalty is bounded above by the roughness penalty, 
+
+\begin{align*}
+	\int_{\mathit{D}}|f_{xx} + f_{yy}|^2 \mathrm{d}x\mathrm{d}y &\leq \int_{\mathit{D}}[(f_{xx})^2 + (f_{yy})^2]\mathrm{d}x\mathrm{d}y \\
+								    &\leq \int_{\mathit{D}}[(f_{xx}^2 + 2(f_{xy})^2 + (f_{yy})^2]\mathrm{d}x\mathrm{d}y \\
+								    &\leq \int_{\mathbb{R}^2}[(f_{xx}^2 + 2(f_{xy})^2 + (f_{yy})^2]\mathrm{d}x\mathrm{d}y \\ 
+								    &= J(f).
+\end{align*}
+
+It is not hard to generalise the above argument from two to an arbitrary number of dimensions.
+
+\smallskip
+
+If we were fitting thin plate splines, as the control parameter $\lambda$ increases, we attempt to reduce the curvature penalty $J(\cdot).$ The above inequality indicates that also has the effect of implicitly controlling, or even reducing the Laplacian penalty at the same time. In a sense the roughness penalty makes the Laplacian penalty redundant.
 
 \section{Non Linear Penalties}
 
-It is convienient to represent a penalty in the form $\mathbf{F(c)'KF(c)},$ where all the terms retain their usual meaning, except we have replaced the term $\mathbf{c}$ with a vector valued function $\mathbf{F(c)}.$ It is easy to find an expression for the gradient of this function, for any two sufficiently smooth vector fields $\mathbf{F}$ and $\mathbf{G}, \nabla(\mathbf{F'G}) = \mathbf{J_{F}G} + \mathbf{J_{G}F}.$ $\mathbf{J_{F}}$ is the Jacobian of the vector field $\mathbf{F}.$Letting $\mathbf{F} =\mathbf{F(c)}$ and $\mathbf{G} = \mathbf{KF(c)}$
+It is convenient to represent a penalty in the form $\mathbf{f(c)'Kf(c)},$ where all the terms retain their usual meaning, except we have replaced the coefficient $\mathbf{c}$ with a vector valued function $\mathbf{f(c)}.$ It is easy to find an expression for the gradient of this function, for any two sufficiently smooth vector fields $\mathbf{f}$ and $\mathbf{g}, \nabla(\mathbf{f'g}) = \mathbf{J_{f}g} + \mathbf{J_{g}F}.$ $\mathbf{J_{f}}$ is the Jacobian of the vector field $\mathbf{f},$ defined by $\mathbf{J_f}_{ij} = \partial \mathbf{f}_i / \partial c_j.$Letting $\mathbf{f} =\mathbf{f(c)}$ and $\mathbf{g} = \mathbf{Kf(c)}$
 
 \[
-	\nabla(\mathbf{F'KF}) = \mathbf{J_{F}KG} + \mathbf{KJ_{G}F}.
+	\nabla(\mathbf{F'KF}) = \mathbf{J_{F}KG} + \mathbf{KJ_{F}F}.
 \]
 
 Where we have used the linearity of the Jacobian operator. 
@@ -356,7 +376,7 @@ Where we have used the linearity of the Jacobian operator.
 
 It will often occur that the function $\mathbf{F(c)}$ depends exclusively on the number of coefficients and not the choice of basis. The Jacobian can be precomputed in advance once we have decided on the number of basis functions. The matrix $\mathbf{K}$ typically depends on our choice of basis as well as the number of basis functions used. 
 
-The function $\mathbf{F(c)}$ is also typically well conditioned, i.e  of ``normal'' size relative to the size of its coefficients. The conditioningof the problem will hinge on $\mathbf{K},$ by examining it we can get insight into whether a choice of basis will perform well for the problem at hand. 
+The function $\mathbf{F(c)}$ is also typically well conditioned, i.e  of ``normal'' size relative to the size of its coefficients. The conditioning of the problem will hinge on $\mathbf{K},$ by examining it we can get insight into whether a choice of basis will perform well for the problem at hand. 
 
 \begin{example}(The Eikonal Equation) The second order nonlinear ODE $y''= y^2$ on the interval $[0,1]$ will be used as an example. We will use a basis consisting of the two monomials $\{1,t,t\}.$ This small basis would not be used for practical problems, but is ideal for an example. The goal is to find an expression for the penalty term $\int_0^1 \{y''(t) - [y(t)]^2\}^2\mathrm{d}t$ under the assumption that $y(t) = a + bt + ct^2,$ a linear combination of our basis functions. This penalty can be interpreted as a norm composed with an operator $\|Ty\|^2 = \|y'' - y^2\|^2 = \langle y'' - y^2, y'' - y^2 \rangle.$ The norm in this case is induced by the inner product $\langle f,g\rangle = \int_0^1 f(t)g(t)\mathrm{d}t.$ 
 
@@ -583,7 +603,7 @@ Where $\mathbf{K}_{ikjl} = \langle \phi_i\phi_k, \phi_j\phi_l \rangle.$ In a sim
 
 \section{Burger's Equation}
 
-The theory of nonlinear partial differential equations is not much harder than that of nonlinear ordinary differential equations. We will look at the dimensionless Burger's eqation
+The theory of nonlinear partial differential equations is not much harder than that of nonlinear ordinary differential equations. We will look at the dimensionless Burger's equation
 
 \[
 	u_{t} +uu_{x} = \epsilon u_{xx}
@@ -638,7 +658,7 @@ If the equation has constants, such that $u_{t} = ru(1-u) + Du_{xx}$ then the te
 
 \smallskip
 
-This system of equations only applies to the line though. If we wish to genearlise to any euclidean space we have 
+This system of equations only applies to the line though. If we wish to generalise to any euclidean space we have 
 
 \[
 	u_{tt} = ru(1-u) + D \Delta u
@@ -789,6 +809,9 @@ We can find a quantity $V$ that is conserved for all solutions,
 This is a linear model in the observations. The standard statistics used in linear regression such as the F-test are not necessarily valid however. If we were to assume for example that the errors in the observed values $x\star$ and $y\star$ had the usual normal distribution and i.i.d, then the nonlinear equation would alter their distribution, so the errors in the ``linear'' model above would not have our usual error structure.
 
 \end{example}
+
+\bibliographystyle{plain}
+\bibliography{ref}
 
 \end{document}
 
