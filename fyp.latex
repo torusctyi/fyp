@@ -66,7 +66,7 @@ Here, $\mathbb{E}[y|t]$ is the conditional expectation of the dependent variable
 
 \begin{figure}[t]
 	\centering
-	\includegraphics[width = 0.5pt, natwidth = 600pt , natheight = 600pt]{ramp_function.pdf}
+	\includegraphics[scale = 0.5]{ramp_function.pdf}
 	\caption{The ramp function function  $\phi_2.$}
 	\label{fig:ramp_function}
 \end{figure}
@@ -115,7 +115,7 @@ $\square$
 
 \section{Least Squares Fitting}
 
-Least squares fitting is a means of fitting a function to data. The least squares fit is the one that minimises the sums of the squared errors ~\cite{Christensen:2012}.  In the cases where we have $n$ observations $y_i$ measured at times $t_i$ and where we are selecting our estimated function $\hat{y}(t)$ from a set of functions $\mathit{S}$, the least squares fit $\hat{y}_{LS}(t)$ is defined as
+Least squares fitting is a means of fitting a function to data. The least squares fit is the one that minimises the sums of the squared errors ~\cite{Christensen:2011}.  In the cases where we have $n$ observations $y_i$ measured at times $t_i$ and where we are selecting our estimated function $\hat{y}(t)$ from a set of functions $\mathit{S}$, the least squares fit $\hat{y}_{LS}(t)$ is defined as
 
 \[
 	\hat{y}_{LS}(t) = \underset{f \in \mathit{S}}{\operatorname{argmin}}\sum_{i = 1}^n [y_i - f(t_i)]^2.
@@ -217,11 +217,11 @@ Where we assume the inverse $\mathbf{M}(\lambda)$ exists.
 
 \smallskip
 
-If this problem is looked at from the perspective of linear models, as in Christessen ~\cite{Christessen:2011}, then $\mathbf{y} = \mathbf{\Phi c + e}$, where the elements of $\mathbf{e}$ are i.i.d and have mean zero and variance $\sigma^2$, then we can estimate the variance of $\hat{y}(t).$ We will denote the matrix $\mathbf{M}(\lambda)$ by $\mathbf{M}.$ The matrix $\mathbf{M}$ can be thought of as a sort of generalised projection matrix, since $\mathbf{M}(0)$ is the projection matrix on to the columns of $\mathbf{\Phi}.$
+If this problem is looked at from the perspective of linear models, as in Christessen ~\cite{Christensen:2011}, then $\mathbf{y} = \mathbf{\Phi c + e}$, where the elements of $\mathbf{e}$ are i.i.d and have mean zero and variance $\sigma^2$, then we can estimate the variance of $\hat{y}(t).$ We will denote the matrix $\mathbf{M}(\lambda)$ by $\mathbf{M}.$ The matrix $\mathbf{M}$ can be thought of as a sort of generalised projection matrix, since $\mathbf{M}(0)$ is the projection matrix on to the columns of $\mathbf{\Phi}.$
 
 We have $\mathbf{\hat{c}} = \mathbf{M(\Phi c + e)},$ so $\mathbb{E}[\mathbf{\hat{c}}] = \mathbf{H\Phi c}.$ The variance of $\mathbf{\hat{c}}$ is given by $\mathrm{Var}[\mathbf{\hat{c}}] = \sigma^2\mathbf{M\Phi\Phi' M'}.$ Hence the expected value of $\mathbf{\hat{y}}$ is $\mathbf{\Phi My}$ and its variance is $\sigma^2 \mathbf{\Phi M\Phi\Phi' M'\Phi'}$.
 
-Under the standard theory of linear models, the least squares estimate $\mathbf{M}(0)\mathbf{y}$ is the Best Linear Unbiased Estimator (BLUE) of $\mathbf{c}$ ~\cite{Christessen:2011}. The contrapositive of this is that any linear estimator, including those of the form $\mathbf{M}(\lambda)\mathbf{y}$, can only achieve better reduction in variance by incurring bias. Any unbiased linear estimator or a linear biased estimator with higher variance than the least squares estimator will have a higher mean error than the least square estimator, and is not worth paying attention to. The only class of linear estimators that can hope to do better than the least squares estimator are those that incur some bias in the hopes of achieving a sufficient reduction in variance to reduce the total mean square error against the least squares estimator. The estimator $\mathbf{M}(\lambda)$ should belong to the category, or there is no point in using it, so it is biased by design.
+Under the standard theory of linear models, the least squares estimate $\mathbf{M}(0)\mathbf{y}$ is the Best Linear Unbiased Estimator (BLUE) of $\mathbf{c}$ ~\cite{Christensen:2011}. The contrapositive of this is that any linear estimator, including those of the form $\mathbf{M}(\lambda)\mathbf{y}$, can only achieve better reduction in variance by incurring bias. Any unbiased linear estimator or a linear biased estimator with higher variance than the least squares estimator will have a higher mean error than the least square estimator, and is not worth paying attention to. The only class of linear estimators that can hope to do better than the least squares estimator are those that incur some bias in the hopes of achieving a sufficient reduction in variance to reduce the total mean square error against the least squares estimator. The estimator $\mathbf{M}(\lambda)$ should belong to the category, or there is no point in using it, so it is biased by design.
 
 \section{Multivariate Bases}
 
@@ -362,8 +362,44 @@ It is not hard to generalise the above argument from two to an arbitrary number 
 
 If we were fitting thin plate splines, as the control parameter $\lambda$ increases, we attempt to reduce the curvature penalty $J(\cdot).$ The above inequality indicates that also has the effect of implicitly controlling, or even reducing the Laplacian penalty at the same time. In a sense the roughness penalty makes the Laplacian penalty redundant.
 
-\section{Non Linear Penalties}
+\section{Estimation of the Parameters of Ordinary Differential Equations Using Generalised Smoothing}
 
+In their seminal paper ~\cite{Rams:Hook:Camp:Cao:2007}, Ramsey et al described how the penalty approach discussed here can be used to estimate the parameters of differential equations. It is assumed that the differential equation is of the form 
+
+\[
+	\dot{\mathbf{x}} = f(\mathbf{x}, t, \mathbf{\theta})
+\]
+
+where $\mathbf{\theta}$ is a vector of parameters, and $\mathbf{x}(t)$ is a possibly vector valued functionn. The convention of using $\mathbf{x}(t)$ to denote the function from that paper is repeated here, rather than $\mathbf{y}(t)$ as is often used in statistics. It is presumed that there are $n$ observations $\mathbf{x}_i$ at times $t_i$ over the time interval $[0, T].$
+
+\smallskip
+
+The authors suggested that we represent the function $\hat{\mathbf{x}}(t)$  as a combination of basis functions, then find the particular combination and parameter vector $\hat{\mathbf{\theta}}$ that minimises the following objective functional,
+
+\[
+	PENSSE[\mathbf{g}(\cdot), \mathbf{\theta}; \lambda] = \sum_{i=1}^n[\mathbf{x}_i - \mathbf{g}(t_i)]^2 + \lambda \int_0^{T}\|\mathbf{g}(t) - \mathbf{f}(\mathbf{g}(t), t, \mathbf{\theta}) \|^2 \mathrm{d}t.
+\]
+
+The parameter $\lambda$ is a control parameter that reflects the balance between attempting to fit the data and attempting to fit the differential equation; if $\lambda$ is set to zero, the least squares fit results. The choice of $\lambda$ can be complicated one. In the original paper ~\cite{Rams:Hook:Camp:Cao:2007} it was suggested that $\lambda$ be initially chosen to start at a small value and be increased until the desired fit can be found. A more sophisticated method that attempts to fit $\lambda$ using cross validation is discussed in ~\cite{Cao:Rams:2007}. 
+
+\smallskip
+
+The fitted function $\hat{x}(\cdot)$ is often regarded as a nuisance parameter, where we are using the term ``parameter'' very loosely to describe a function. One is usually interested in to estimating the parameter vector $\mathbf{\theta}$ or determining the ideal choice of $\lambda$ or both. 
+
+\smallskip
+
+A problematic issue encountered is efficiently evaluating the integral penalty term $\int_0^{T}\|\mathbf{x}(t) - \mathbf{f}(\mathbf{x}(t), t, \mathbf{\theta}) \|^2 \mathrm{d}t,$ particularly when the differential equation is nonlinear. It has been suggested that the integrals be approximated by a quadrature scheme
+
+\[
+	\int_0^{T}\|\mathbf{x}(t) - \mathbf{f}(\mathbf{x}(t), t, \mathbf{\theta}) \|^2 \mathrm{d}t \approx \sum_{i=0}^K w_i \|\mathbf{x}(t_i) - \mathbf{f}(\mathbf{x}(t_i), t_i, \mathbf{\theta})\|^2.
+\]
+
+The times $t_i$ and weights $w_i$ depend on the kind of quadrature scheme at hand. The disadvantage is that this is only an approximation to the actual penalty.  
+
+\smallskip
+
+Ramsay and Cao developed the ``parameter cascade'' to the problem of minimising the penalty  ~\cite{Cao:Rams:2007}. In essence it conducts an optimisation step in three stages. First it estimates the function subject to $\lambda$ and $\theta$, it then feeds that estimate back into the problem of estimating the $\lambda$ term from the data. T    
+\section{Non Linear Penalties}
 It is convenient to represent a penalty in the form $\mathbf{f(c)'Kf(c)},$ where all the terms retain their usual meaning, except we have replaced the coefficient $\mathbf{c}$ with a vector valued function $\mathbf{f(c)}.$ It is easy to find an expression for the gradient of this function, for any two sufficiently smooth vector fields $\mathbf{f}$ and $\mathbf{g}, \nabla(\mathbf{f'g}) = \mathbf{J_{f}g} + \mathbf{J_{g}F}.$ $\mathbf{J_{f}}$ is the Jacobian of the vector field $\mathbf{f},$ defined by $\mathbf{J_f}_{ij} = \partial \mathbf{f}_i / \partial c_j.$Letting $\mathbf{f} =\mathbf{f(c)}$ and $\mathbf{g} = \mathbf{Kf(c)}$
 
 \[
@@ -387,7 +423,7 @@ For this choice of basis $y'' - y^2 = (a+bt+ct^2 )'' - (a+bt+ct^2)^2 = 2c - (a^2
 Contrast the matrix $\mathbf{K}$ with the $5 \times 5$ Hilbert matrix $\mathbf{H}$, defined by $\mathbf{H}_{ij} = 1 / (i + j - 1).$ This matrix is known to be ill-conditioned, which suggests that a polynomial basis will be less than ideal for this problem. 
 
 
-It is not hard to generalise the results to an arbitary polynomial basis, so instead we will examine a general basis. The trick is that if our function is of the form $f = \sum c_i\phi_i$ then some nonlinear operators will return something of the form $\sum b_i(\mathbf{c}) \psi_i$ for some other functions $\{\psi_i\}$. The coefficients $b_i$ depend on the original coefficients $c_i,$ reflecting the fact the our function is uniquely defined by and represented by its coefficients.  Since the nonlinear operator $T$ has the property that it maps from one vector space to another, the span of the $\phi_i$ functions to the span of the $\psi_i$ functions. The nonlinearity is reflected in the fact the coefficients in front of the $\psi_i$ depend nonlinearly on the coefficients of the $\phi_i$ functions.
+It is not hard to generalise the results to an arbitary polynomial basis, so instead we will examine a general basis, and a general nonlinear operator $T$. The trick is that if our function is of the form $f = \sum c_i\phi_i$ then some nonlinear operators will return something of the form $\sum b_i(\mathbf{c}) \psi_i$ for some other functions $\{\psi_i\}$. The coefficients $b_i$ depend on the original coefficients $c_i,$ reflecting the fact the our function is uniquely defined by and represented by its coefficients.  Since the nonlinear operator $T$ has the property that it maps from one vector space to another, the span of the $\phi_i$ functions to the span of the $\psi_i$ functions. The nonlinearity is reflected in the fact the coefficients in front of the $\psi_i$ depend nonlinearly on the coefficients of the $\phi_i$ functions.
 
 \smallskip 
 
@@ -397,7 +433,7 @@ Since the image (or range) of the span of the $\phi_i$ under $T$ is a vector sub
 
 Finding the matrix $\mathbf{A}$ is easy it depends only on the $\psi_i$ and can be written in the form $\mathbf{A}_{ij} = \langle \psi_i, \psi_j \rangle$. The new basis $\{\psi_i\}$ is self evident in many cases. The hard part is finding the coefficients, or equivalently the function $\mathbf{F(c)}.$
 
-We will do the above example again for a general basis, where $y = c_1\phi_i + \dots + c_k\phi_k.$ We desire to calculate the penalty
+\begin{example}(Nonlinear Equation Continued) We will return to the same problem as before and do the above example again for a general basis, where $y = c_1\phi_i + \dots + c_k\phi_k.$ We desire to calculate the penalty
 \[
 	\int_\mathit{D} (f''(t) - f(t)^2)^2\mathrm{dt}.
 \]
@@ -417,7 +453,11 @@ Hence,
 	f''(t) - f(t)^2 = \sum_{i=0}^mc_i\phi(t)'' - \sum_{i=0}^m\sum_{j=0}^mc_ic_j\phi_i(t)\phi_j(t).
 \]
 
-Notice the second term is a two dimensional, finite sum. We now need to find its norm. As before we can write this as an inner product: $\langle f'' - f^2, f'' - f^2 \rangle$. The above expression is in the form $a_1\phi_1'' + \dots + a_m\phi_m'' +  b_{11}\phi_1\phi_1 + \dots b_{mm}\phi_m\phi_m$, so we can represent it as $\mathbf{F(c)'AF(c)}$. The form above is a little awkward to work with. We would like to have it vary with one index only, or combine the $\phi_i''$ and the $\phi_i\phi_j$ together. We would define a function $\pi(n)$ that returns the appropriate function either some $\phi_i$ or $\phi_i\phi_j$ depending on the value. Defining such a function is tricky however. One function is as follows
+It can be seen that the second term is a two dimensional, finite sum. We now need to find its norm. As before we can write this as an inner product: $\langle f'' - f^2, f'' - f^2 \rangle$. The above expression is in the form $a_1\phi_1'' + \dots + a_m\phi_m'' +  b_{11}\phi_1\phi_1 + \dots b_{mm}\phi_m\phi_m$, so it is expected that we can represent it as $\mathbf{F(c)'AF(c)}$. The form above is a little awkward to work with. We would like to have it vary with one index only, or combine the $\phi_i''$ and the $\phi_i\phi_j$ together. 
+
+\smallskip
+
+To put the basis in a nice form, it is necessary to devises some sort of indexing function $\pi(n)$ from $\mathbb{N}$ to our basis, that returns the appropriate function either some $\phi_i$ or $\phi_i\phi_j$ depending on the value. Defining such a function is tricky however. One function is as follows
 
 \[
 	\pi(k) = \begin{cases}
@@ -430,7 +470,7 @@ Here $a|b$ is integer division, i.e. $a|b = \operatorname{floor}(a/b)$.
 
 \smallskip
 
-If we define $\psi_k(t)$ to be $\pi_k(t)$ and define a similar function $\sigma(i)$ for the coefficients we can define $f'' - f^2$ we get
+If in order to tidy up the basis we define $\psi_k(t)$ to be $\pi_k(t)$ and define a similar function $\sigma(i)$ for the coefficients we can define $f'' - f^2$ 
 
 \[
 	f'' - f^2 = \sum \sigma(i)\psi_i.
@@ -451,6 +491,8 @@ We can write the Penalised Sum of Squared Errors in terms of the $c_i$
 \[
 	PENSSE(\mathbf{c}) = \mathbf{(y - \Phi c)}'\mathbf{(y - \Phi c)} + \lambda \mathbf{\sigma(c)'K\sigma(c)}.
 \]
+
+\end{example}
 
 \subsection*{Alternative Representation Of The Penalty By Splitting the Inner Product}
 

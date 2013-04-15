@@ -1,6 +1,6 @@
 # Building
 
-all: fyp.pdf
+all:fyp 
 
 PLOT_PDFS = ramp_function.pdf
 
@@ -13,8 +13,11 @@ fyp.dvi: fyp.latex  $(PLOT_PDFS)
 	latex fyp.latex
 	latex fyp.latex
 	
-fyp.pdf: fyp.dvi $(PLOT_PDFS)
-	dvipdfm fyp.dvi
+fyp.pdf: fyp.latex $(PLOT_PDFS)
+	pdflatex -halt-on-error fyp.latex
+	bibtex fyp
+	pdflatex fyp.latex
+	pdflatex fyp.latex	
 	
 fyp: fyp.pdf
 
@@ -27,5 +30,5 @@ clean.dvi:
 clean.pdf:
 	rm -f *.pdf
 
-clean: clean.auxillary clean.pdf
+clean: clean.auxillary clean.pdf clean.dvi
 

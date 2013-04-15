@@ -1,5 +1,16 @@
 \begin{thebibliography}{1}
 
+\bibitem{Cao:Rams:2007}
+Jiguo Cao and James~O. Ramsay.
+\newblock Parameter cascades and profiling in functional data analysis.
+\newblock {\em Computational Statistics}, 22(3):335--351, 2007.
+
+\bibitem{Christensen:2011}
+Ronald Christensen.
+\newblock {\em Plane answers to complex questions: the theory of linear
+  models}.
+\newblock Springer Science+ Business Media, 2011.
+
 \bibitem{Marx:Eilers:1996}
 Paul~HC Eilers and Brian~D Marx.
 \newblock Flexible smoothing with b-splines and penalties.
@@ -14,6 +25,13 @@ P.J. Green and B.~W. Silverman.
 Arthur~E Hoerl and Robert~W Kennard.
 \newblock Ridge regression: Biased estimation for nonorthogonal problems.
 \newblock {\em Technometrics}, 12(1):55--67, 1970.
+
+\bibitem{Rams:Hook:Camp:Cao:2007}
+J.~O. Ramsay, G.~Hooker, D.~Campbell, and J.~Cao.
+\newblock Parameter estimation for differential equations: a generalized
+  smoothing approach.
+\newblock {\em Journal of the Royal Statistical Society, Series B: Statistical
+  Methodology}, 69(5):741--796, 2007.
 
 \bibitem{Rupert:Carroll:Wand:2003}
 David Ruppert, Matthew~P Wand, and Raymond~J Carroll.
